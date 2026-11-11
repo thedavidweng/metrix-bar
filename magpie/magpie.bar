@@ -1,0 +1,668 @@
+<bar protocol-version="0"
+     category="ai"
+     version="1.0.0"
+     description="Control magpie from the menu bar: switch agents' models, connect agents, and watch allowances."
+     license="AGPL-3.0-only"
+     homepage="https://github.com/yetone/magpie"
+     id="magpie"
+     icon="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NCA0NCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xLjUgNS41QzEuMyA1LjcgMS4yIDYuNSAxLjIgNi45QzEuMiA2LjkgMS4yIDcgMS4yIDcuMUMxLjEgNy40IDEuMyA4IDEuNCA4LjNDMS40IDguNCAxLjUgOC41IDEuNSA4LjdDMS41IDguOSAxLjcgOSAxLjggOS4zQzIuMiA5LjkgMi4yIDEwIDIuMyAxMC4xQzIuNCAxMC4yIDIuNSAxMC4zIDIuNiAxMC41QzIuOCAxMC44IDMgMTEuMSAzLjIgMTEuM0MzLjMgMTEuMyAzLjQgMTEuNiAzLjYgMTEuOEMzLjggMTIgNC4xIDEyLjQgNC4yIDEyLjVDNC43IDEzIDUuMiAxMy43IDUuNCAxMy45QzYgMTQuNSA2LjUgMTUuMSA2LjcgMTUuM0M2LjcgMTUuNCA2LjkgMTUuNSA2LjkgMTUuN0M3LjMgMTUuOSA3LjcgMTYuNSA3LjkgMTYuOEM3LjkgMTYuOCA4IDE2LjkgOCAxNi45QzguMSAxNi45IDguMiAxNy4yIDguMiAxNy4zQzguMiAxNy4zIDguMSAxNy4yIDguMSAxNy4xQzcuOSAxNi45IDcuOSAxNi45IDcuNiAxNi42QzcuNSAxNi41IDcuNCAxNi41IDcuNCAxNi4zQzcuMiAxNi4yIDYuNyAxNS43IDYuMyAxNS4yQzYuMSAxNS4xIDYgMTQuOSA2IDE0LjlDNS45IDE0LjggNS43IDE0LjcgNS43IDE0LjZDNS42IDE0LjUgNS40IDE0LjMgNS4zIDE0LjJDNS4xIDE0LjEgNC45IDEzLjggNC43IDEzLjVDNC41IDEzLjMgNC4yIDEzLjEgNC4xIDEyLjlDNC4xIDEyLjkgMy44IDEyLjcgMy44IDEyLjVDMy41IDEyLjMgMyAxMS44IDIuOCAxMS40QzEuOCAxMC41IDAuOSA5LjYgMC43IDkuNkMwLjYgOS43IDAuNiA5LjggMC41IDEwQzAuNSAxMC4xIDAuNiAxMC4yIDAuNSAxMC4zQzAuNSAxMC40IDAuNiAxMC41IDAuNiAxMC42QzAuNSAxMC43IDAuNSAxMC45IDAuNiAxMUMwLjUgMTEuMSAwLjYgMTEuNCAwLjYgMTEuNUMwLjkgMTIuOSAxLjMgMTMuOCAyLjggMTQuOUMyLjkgMTUuMSAzLjMgMTUuMyAzLjQgMTUuNEMzLjQgMTUuNSAzLjYgMTUuNiAzLjcgMTUuN0M0LjIgMTYgNi40IDE3LjggNyAxOC40QzcuNCAxOC44IDcuNCAxOC44IDcuNSAxOC45QzcuNiAxOSA3LjcgMTkgNy43IDE5LjFDNy43IDE5LjIgNy44IDE5LjIgNy45IDE5LjJDNy45IDE5LjMgOC4xIDE5LjQgOC4xIDE5LjVDOC4yIDE5LjYgOC4yIDE5LjcgOC4zIDE5LjdDOC4zIDE5LjcgOC4zIDE5LjcgOC4yIDE5LjdDOC4yIDE5LjYgOC4xIDE5LjYgOCAxOS42QzcuOSAxOS41IDcuOSAxOS40IDcuOCAxOS40QzcuNyAxOS4zIDcuNiAxOS4yIDcuNiAxOS4yQzcuNiAxOS4xIDcuNSAxOSA3LjMgMTguOUM3LjIgMTguOSA2LjkgMTguNiA2LjcgMTguNEM2LjEgMTcuOCA0LjUgMTYuNiAzLjUgMTZDMy40IDE1LjggMyAxNS42IDIuOSAxNS41QzIuNiAxNS4zIDEuNSAxNC42IDAuOSAxNC4zQzAuNyAxNC4xIDAuNiAxNC4xIDAuNiAxNC4yQzAuNSAxNC41IDAuOCAxNS45IDAuOSAxNi4xQzAuOSAxNi4yIDEgMTYuMiAwLjkgMTYuM0MxLjIgMTYuOCAxLjkgMTcuNiAyLjcgMTguM0MyLjggMTguNSA0IDE5LjIgNC43IDE5LjVDNi4yIDIwLjUgNi42IDIwLjcgNy40IDIxLjVDOC4yIDIyLjIgOC43IDIyLjcgOS4zIDIzLjZDOS41IDI0LjEgOS45IDI0LjQgMTAuMyAyNS4zQzEwLjQgMjUuNSAxMC41IDI1LjggMTAuNSAyNS44QzEwLjcgMjUuOCAxMC44IDI1LjcgMTEgMjUuNEMxMS42IDI1IDExLjkgMjQuNiAxMi4zIDI0LjNDMTIuOCAyNCAxMyAyMy44IDEzIDIzLjdDMTMuMSAyMy43IDEzLjEgMjMuOCAxMyAyNEMxMiAyNC44IDExIDI2IDEwLjIgMjYuOUMxMC4xIDI3LjEgOS45IDI3LjUgOS43IDI3LjdDOS41IDI3LjggOS40IDI4IDkuNCAyOEM5LjQgMjggOS4zIDI4LjMgOS4xIDI4LjVDOC42IDI5LjIgNy43IDMwLjggNy43IDMwLjlDNy43IDMxIDcuOCAzMSA4LjMgMzAuOEM5IDMwLjQgOS41IDMwLjIgMTAuNCAzMEMxMS43IDI5LjYgMTIuNSAyOS42IDExLjYgMzBDMTAuNSAzMC4yIDkuNyAzMC42IDkuMiAzMS4yQzguOCAzMS43IDguOCAzMS43IDkuMyAzMS43QzEwLjEgMzEuOCAxMC45IDMxLjkgMTEuNiAzMi4yQzEyLjggMzIuNyAxMy41IDMzLjEgMTUuNSAzNC44QzE2LjQgMzUuNSAxNy4zIDM2LjIgMTcuOCAzNi40QzE3LjkgMzYuNSAxOC4xIDM2LjcgMTguMiAzNi44QzE5LjEgMzcuMyAyMS4yIDM4LjEgMjIuMyAzOC4zQzIyLjQgMzguMyAyMi43IDM4LjMgMjIuOCAzOC4zQzIyLjggMzguNSAyMyAzOC41IDIzIDM4LjVDMjMuMSAzOC41IDIzLjIgMzguNSAyMy4zIDM4LjVDMjMuNiAzOC42IDI1LjkgMzguNiAyNi4xIDM4LjVDMjYuMiAzOC41IDI2LjMgMzguNSAyNi40IDM4LjVDMjYuNSAzOC41IDI2LjYgMzguNSAyNi43IDM4LjNDMjYuNyAzOC4zIDI3IDM4LjMgMjcuMSAzOC4zQzI4LjMgMzguMSAzMC4yIDM3LjMgMzEuNCAzNi43QzMxLjUgMzYuNyAzMS43IDM2LjQgMzEuOCAzNi40QzMyLjIgMzYuMiAzMy4yIDM1LjQgMzMuNCAzNS4yQzM0LjIgMzQuNSAzNS41IDMzIDM1LjggMzIuNkMzNS44IDMyLjUgMzYgMzIuMiAzNi4xIDMyQzM2LjQgMzEuOCAzNi42IDMxLjQgMzYuNiAzMS4yQzM2LjcgMzEuMSAzNi44IDMwLjkgMzYuOSAzMC44QzM3LjIgMzAuNCAzNy41IDI5LjYgMzcuNyAyOS4yQzM3LjcgMjkuMSAzNy44IDI4LjcgMzcuOSAyOC43QzM4LjEgMjguNSAzOC40IDI3LjEgMzguNSAyNi44QzM5IDI1LjIgMzkuMSAyMy43IDM5IDIyLjRDMzkgMjIuMiAzOC45IDIxLjkgMzguOSAyMS44QzM4LjkgMjEuNyAzOC45IDIxLjYgMzguOSAyMS40QzM4LjYgMjAuNSAzOC41IDE5LjkgMzguMiAxOUMzNy45IDE4LjUgMzcuNSAxNy41IDM3LjMgMTcuMkMzNyAxNi44IDM2LjggMTUuOCAzNi44IDE1LjJDMzYuOCAxMy44IDM3LjcgMTIuNyAzOS42IDEyLjJDNDAuMSAxMi4xIDQxLjMgMTEuOCA0Mi4xIDExLjdDNDMuNSAxMS41IDQzLjUgMTEuNSA0My40IDExLjNDNDIuOSAxMC43IDQwLjkgOS45IDM5LjIgOS43QzM3LjkgOS41IDM4LjEgOS41IDM3LjYgOUMzNyA4LjYgMzYuNCA4IDM2IDcuOUMzNiA3LjggMzUuOCA3LjggMzUuNyA3LjdDMzUuMSA3LjMgMzQuMiA3IDMzLjEgNi45QzMyLjYgNi43IDMxLjYgNi45IDMxIDdDMjkuNiA3LjMgMjguMyA4IDI3LjMgOS4yQzI2LjcgOS44IDI2LjIgMTAuOCAyNS43IDExLjdDMjUuNSAxMi4xIDI0LjggMTMuNCAyNC43IDEzLjdDMjQuNiAxMy45IDI0LjUgMTQuMSAyNC4xIDE0LjdDMjMuNSAxNS43IDIyLjEgMTYuOSAyMC42IDE3LjhDMjAuNSAxOCAyMC4zIDE4LjIgMjAuMSAxOC4zQzE5LjcgMTguNSAxOS40IDE4LjggMTkuMSAxOUMxOC45IDE5LjEgMTguNyAxOS4zIDE4LjUgMTkuNEMxOCAxOS44IDE3LjIgMjAuMyAxNyAyMC41QzE2LjkgMjAuNSAxNi44IDIwLjYgMTYuNyAyMC43QzE2LjMgMjAuOCAxNi4xIDIwLjkgMTYgMjAuOUMxNS41IDIwLjggMTQuOSAyMC41IDE0LjIgMjAuMkMxMy43IDE5LjggMTIuNyAxOC45IDEyLjQgMTguNkMxMi4zIDE4LjUgMTIuMiAxOC40IDEyLjEgMTguMkMxMS45IDE4IDExLjIgMTcuMSAxMSAxNi42QzEwLjkgMTYuNSAxMC44IDE2LjQgMTAuNyAxNi4zQzEwLjcgMTYuMiAxMC42IDE2LjEgMTAuNiAxNS45QzEwLjUgMTUuOSAxMC40IDE1LjcgMTAuNCAxNS42QzEwLjMgMTUuNSAxMC4yIDE1LjIgMTAuMSAxNUMxMCAxNC44IDkuOCAxNC40IDkuNyAxNC4yQzkuNiAxNCA5LjUgMTMuNyA5LjQgMTMuNkM5LjQgMTMuNCA5LjMgMTMuMiA5LjIgMTNDOS4yIDEyLjggOSAxMi42IDkgMTIuNUM4LjkgMTIuMyA4LjcgMTIuMSA4LjcgMTJDOC43IDEyIDguNSAxMS43IDguNSAxMS43QzguMyAxMS4yIDguMiAxMC45IDcuNSAxMEM2LjQgOC4zIDQuMiA2LjQgMi43IDUuOEMyIDUuNSAxLjYgNS40IDEuNSA1LjVaTTI4LjQgMTYuN0MyOS4yIDE2LjkgMjkuNyAxNy4yIDI5LjkgMTcuN0MzMC4xIDE4LjIgMzAgMTguOSAyOS42IDE5LjRDMjkuMiAxOS45IDI4LjIgMjAuOSAyNy42IDIxLjJDMjYuOCAyMS43IDI1LjMgMjIuNCAyNC4yIDIyLjdDMjMuOSAyMi44IDIzLjYgMjIuOSAyMy41IDIyLjlDMjIuOCAyMy4yIDIwLjcgMjMuNyAxOS42IDI0QzE5IDI0LjIgMTguNCAyNC4zIDE4LjEgMjQuNEMxNy45IDI0LjQgMTYuMSAyNC45IDE1LjMgMjUuMUMxNC42IDI1LjIgMTQuNyAyNS4xIDE1LjcgMjMuNkMxNi40IDIyLjcgMTguNSAyMC42IDE5LjQgMTkuOUMyMC44IDE4LjggMjEuNCAxOC40IDIzLjIgMTcuNkMyMy44IDE3LjQgMjUuNiAxNi44IDI1LjkgMTYuOEMyNS45IDE2LjggMjYuMyAxNi44IDI2LjYgMTYuN0MyNi44IDE2LjcgMjguMiAxNi43IDI4LjQgMTYuN1pNMzAuNCAyMC4yQzMwLjUgMjAuMyAzMC42IDIwLjYgMzAuNiAyMC43QzMxLjcgMjMuMSAzMy40IDI0LjYgMzUuNiAyNS4zQzM2LjEgMjUuNSAzNi43IDI1LjcgMzcuMiAyNS44QzM3LjcgMjUuOCAzNy44IDI1LjkgMzcuOCAyNi4xQzM3LjcgMjYuMiAzNy43IDI2LjMgMzcuNyAyNi41QzM3LjcgMjYuNiAzNy43IDI2LjggMzcuNiAyN0MzNy40IDI4LjUgMzYuOCAyOS45IDM2LjEgMzFDMzYuMSAzMS4yIDM1LjkgMzEuNCAzNS45IDMxLjZDMzUuNyAzMS45IDM1LjIgMzIuNiAzNC43IDMzLjNDMzIuNiAzNS42IDI5LjcgMzcuMyAyNi42IDM3LjhDMjYuNSAzNy44IDI2LjMgMzcuOSAyNi4yIDM3LjlDMjUuOCAzNy45IDIzLjcgMzcuOSAyMy4zIDM3LjlDMjMuMiAzNy45IDIzIDM3LjggMjIuOSAzNy44QzIxLjEgMzcuNiAxOS4zIDM2LjggMTggMzUuN0MxNy43IDM1LjQgMTcgMzQuNyAxNi44IDM0LjVDMTYuMyAzMy44IDE2LjEgMzMgMTYuMyAzMi41QzE2LjUgMzEuOCAxNi44IDMxLjYgMTcuOSAzMS4xQzE5LjEgMzAuNSAxOS40IDMwLjQgMjAuMiAzMEMyMS40IDI5LjQgMjMuMiAyOC40IDIzLjkgMjcuOUMyMy45IDI3LjggMjQuMiAyNy43IDI0LjUgMjcuNkMyNi4zIDI2LjMgMjggMjQuNiAyOC45IDIyLjlDMjkuNSAyMi4yIDI5LjcgMjEuNiAyOS45IDIwLjdDMzAuMSAyMCAzMC4yIDE5LjkgMzAuNCAyMC4yWiIvPjwvc3ZnPg=="
+     title="Magpie"
+     refresh="2m"
+     material="glass">
+
+  <permissions>
+    <network origin="{{ inputs.host }}" allow-http="true" />
+  </permissions>
+
+  <inputs>
+    <input name="host" type="string" label="Magpie URL" required="true" placeholder="http://192.168.1.20:3430"
+           help="The magpie web address: scheme, host and port only, without the path or `?k=`." />
+    <input name="webKey" type="secret" label="Web Key" required="true"
+           help="The value after `?k=` in the link magpie prints. It grants full control of that magpie, so keep it private." />
+    <input name="lang" type="select" label="Language" default="auto">
+      <option value="auto" label="Same as magpie" />
+      <option value="en" label="English" />
+      <option value="zh" label="简体中文" />
+    </input>
+    <input name="hideAccounts" type="select" label="Hide Accounts" default="auto"
+           help="Blur email addresses and account names, as magpie's Hide accounts does. Same as magpie follows magpie's Privacy setting.">
+      <option value="auto" label="Same as magpie" />
+      <option value="on" label="On" />
+      <option value="off" label="Off" />
+    </input>
+    <input name="showAgents" type="bool" label="Show Agents" default="true" />
+    <input name="showAllowances" type="bool" label="Show Allowances" default="true" />
+    <input name="showUsage" type="bool" label="Show Today's Usage" default="false" />
+    <input name="tray" type="select" label="Menu Bar Shows" default="allowance">
+      <option value="allowance" label="Allowance, as magpie's menu bar does" />
+      <option value="icon" label="Icon only" />
+    </input>
+  </inputs>
+
+  <docs><![CDATA[Connects to a magpie you run elsewhere, such as on a server.
+
+1. Open magpie's web page from the link it prints (magpie web, or Settings › Network and sharing › Browser access in the app). The link looks like http://HOST:PORT/?k=KEY.
+2. Put http://HOST:PORT into Magpie URL and KEY into Web Key.
+
+The key grants full control of that magpie, so keep it private. Plain HTTP is allowed for Magpie URL only, since magpie web usually runs on a home network or tailnet without HTTPS. Which sections the panel shows, its language and the menu bar text are in these settings too.]]></docs>
+
+  <script apis="shell"><![CDATA[
+const h = (type, props, ...children) =>
+  ({ type, props: props || {}, children: children.flat().filter(c => c !== null && c !== undefined && c !== false) });
+const TX = (text, props) => h("Text", props, String(text));
+
+const TRACK = "#8080802e";
+
+// ---- i18n: keys are magpie's own English strings, zh is magpie's own wording ----
+const ZH = {
+  "Agents": "Agent",
+  "Allowances": "额度",
+  "Usage today": "今日用量",
+  "Refresh": "刷新",
+  "Open magpie": "打开 magpie",
+  "Show {n} more": "显示其余 {n} 个",
+  "Show less": "收起",
+  "No agents found": "没有找到 Agent",
+  "No allowances yet": "还没有额度",
+  "model": "模型",
+  "effort": "推理强度",
+  "default": "默认",
+  "Connect": "接入",
+  "Disconnect": "断开",
+  "Not used yet": "还没用过",
+  "Resets {when}": "重置于 {when}",
+  "Reset time passed": "重置时间已过",
+  "Unlimited": "无限",
+  "Balance": "余额",
+  "Requests": "请求",
+  "Tokens": "Token",
+  "Cost": "费用",
+  "used": "已用",
+  "left": "剩余",
+  "resets in {in}": "{in}后重置",
+  "Not installed": "未安装",
+  "Not connected · {agent} uses its own settings": "未接入 · 用 {agent} 自己的设置",
+  "Connected · magpie's models are in {agent}'s model list": "已接入 · magpie 的模型在 {agent} 的模型列表里",
+  "Connected · {n} models in {agent}'s {cmd}": "已接入 · {agent} 的 {cmd} 里有 {n} 个模型",
+  "Connected · starts on the model picked here": "已接入 · 用这里选的模型启动",
+  "Connected · takes effect once {agent} is reopened": "已接入 · 重开 {agent} 后生效",
+  "Connected · {n} copies of {agent} to reopen": "已接入 · {n} 个运行中的 {agent} 待重开",
+  "Connected · quit and reopen the {agent} app": "已接入 · 退出并重开 {agent} 应用后生效",
+  "Connected · reload the editor's window": "已接入 · 重新加载编辑器窗口后生效",
+  "Connected · restart {agent}'s app-server": "已接入 · 重启 {agent} 的后台 app-server 后生效",
+  "Connected · restart {agent} in the terminal": "已接入 · 重启终端里的 {agent} 后生效",
+  "Connected · reopen {app}": "已接入 · 重开 {app} 后生效",
+  "Connected · new sessions take it": "已接入 · 新开的会话生效",
+  "Connected · switch the opus · sonnet · haiku tiers in /model": "已接入 · 在 /model 里切换 opus · sonnet · haiku 档位",
+  "Couldn't reach magpie": "连不上 magpie",
+  "Try again": "重试",
+  "Set Magpie URL and Web Key in this dashboard's settings.": "请在这个看板的设置里填写 Magpie URL 和 Web Key。",
+  "magpie didn't take the web key (HTTP {status}).": "magpie 不接受这个 Web Key（HTTP {status}）。",
+  "magpie answered HTTP {status}.": "magpie 返回了 HTTP {status}。",
+  "Refresh this allowance": "刷新这项额度",
+  "{n} accounts can't be read": "{n} 个账号读不到额度",
+  "Show this account": "显示这个账号",
+  "Hide this account": "重新给这个账号打码",
+};
+const WEEK = { en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], zh: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"] };
+const MONTH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+let lang = "en";
+function t(key, vars) {
+  let s = (lang === "zh" && ZH[key]) || key;
+  for (const k in vars || {}) s = s.split("{" + k + "}").join(String(vars[k]));
+  return s;
+}
+
+// ---- icons ----
+const BIRD = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44"><path fill="currentColor" fill-rule="evenodd" d="M1.5 5.5C1.3 5.7 1.2 6.5 1.2 6.9C1.2 6.9 1.2 7 1.2 7.1C1.1 7.4 1.3 8 1.4 8.3C1.4 8.4 1.5 8.5 1.5 8.7C1.5 8.9 1.7 9 1.8 9.3C2.2 9.9 2.2 10 2.3 10.1C2.4 10.2 2.5 10.3 2.6 10.5C2.8 10.8 3 11.1 3.2 11.3C3.3 11.3 3.4 11.6 3.6 11.8C3.8 12 4.1 12.4 4.2 12.5C4.7 13 5.2 13.7 5.4 13.9C6 14.5 6.5 15.1 6.7 15.3C6.7 15.4 6.9 15.5 6.9 15.7C7.3 15.9 7.7 16.5 7.9 16.8C7.9 16.8 8 16.9 8 16.9C8.1 16.9 8.2 17.2 8.2 17.3C8.2 17.3 8.1 17.2 8.1 17.1C7.9 16.9 7.9 16.9 7.6 16.6C7.5 16.5 7.4 16.5 7.4 16.3C7.2 16.2 6.7 15.7 6.3 15.2C6.1 15.1 6 14.9 6 14.9C5.9 14.8 5.7 14.7 5.7 14.6C5.6 14.5 5.4 14.3 5.3 14.2C5.1 14.1 4.9 13.8 4.7 13.5C4.5 13.3 4.2 13.1 4.1 12.9C4.1 12.9 3.8 12.7 3.8 12.5C3.5 12.3 3 11.8 2.8 11.4C1.8 10.5 0.9 9.6 0.7 9.6C0.6 9.7 0.6 9.8 0.5 10C0.5 10.1 0.6 10.2 0.5 10.3C0.5 10.4 0.6 10.5 0.6 10.6C0.5 10.7 0.5 10.9 0.6 11C0.5 11.1 0.6 11.4 0.6 11.5C0.9 12.9 1.3 13.8 2.8 14.9C2.9 15.1 3.3 15.3 3.4 15.4C3.4 15.5 3.6 15.6 3.7 15.7C4.2 16 6.4 17.8 7 18.4C7.4 18.8 7.4 18.8 7.5 18.9C7.6 19 7.7 19 7.7 19.1C7.7 19.2 7.8 19.2 7.9 19.2C7.9 19.3 8.1 19.4 8.1 19.5C8.2 19.6 8.2 19.7 8.3 19.7C8.3 19.7 8.3 19.7 8.2 19.7C8.2 19.6 8.1 19.6 8 19.6C7.9 19.5 7.9 19.4 7.8 19.4C7.7 19.3 7.6 19.2 7.6 19.2C7.6 19.1 7.5 19 7.3 18.9C7.2 18.9 6.9 18.6 6.7 18.4C6.1 17.8 4.5 16.6 3.5 16C3.4 15.8 3 15.6 2.9 15.5C2.6 15.3 1.5 14.6 0.9 14.3C0.7 14.1 0.6 14.1 0.6 14.2C0.5 14.5 0.8 15.9 0.9 16.1C0.9 16.2 1 16.2 0.9 16.3C1.2 16.8 1.9 17.6 2.7 18.3C2.8 18.5 4 19.2 4.7 19.5C6.2 20.5 6.6 20.7 7.4 21.5C8.2 22.2 8.7 22.7 9.3 23.6C9.5 24.1 9.9 24.4 10.3 25.3C10.4 25.5 10.5 25.8 10.5 25.8C10.7 25.8 10.8 25.7 11 25.4C11.6 25 11.9 24.6 12.3 24.3C12.8 24 13 23.8 13 23.7C13.1 23.7 13.1 23.8 13 24C12 24.8 11 26 10.2 26.9C10.1 27.1 9.9 27.5 9.7 27.7C9.5 27.8 9.4 28 9.4 28C9.4 28 9.3 28.3 9.1 28.5C8.6 29.2 7.7 30.8 7.7 30.9C7.7 31 7.8 31 8.3 30.8C9 30.4 9.5 30.2 10.4 30C11.7 29.6 12.5 29.6 11.6 30C10.5 30.2 9.7 30.6 9.2 31.2C8.8 31.7 8.8 31.7 9.3 31.7C10.1 31.8 10.9 31.9 11.6 32.2C12.8 32.7 13.5 33.1 15.5 34.8C16.4 35.5 17.3 36.2 17.8 36.4C17.9 36.5 18.1 36.7 18.2 36.8C19.1 37.3 21.2 38.1 22.3 38.3C22.4 38.3 22.7 38.3 22.8 38.3C22.8 38.5 23 38.5 23 38.5C23.1 38.5 23.2 38.5 23.3 38.5C23.6 38.6 25.9 38.6 26.1 38.5C26.2 38.5 26.3 38.5 26.4 38.5C26.5 38.5 26.6 38.5 26.7 38.3C26.7 38.3 27 38.3 27.1 38.3C28.3 38.1 30.2 37.3 31.4 36.7C31.5 36.7 31.7 36.4 31.8 36.4C32.2 36.2 33.2 35.4 33.4 35.2C34.2 34.5 35.5 33 35.8 32.6C35.8 32.5 36 32.2 36.1 32C36.4 31.8 36.6 31.4 36.6 31.2C36.7 31.1 36.8 30.9 36.9 30.8C37.2 30.4 37.5 29.6 37.7 29.2C37.7 29.1 37.8 28.7 37.9 28.7C38.1 28.5 38.4 27.1 38.5 26.8C39 25.2 39.1 23.7 39 22.4C39 22.2 38.9 21.9 38.9 21.8C38.9 21.7 38.9 21.6 38.9 21.4C38.6 20.5 38.5 19.9 38.2 19C37.9 18.5 37.5 17.5 37.3 17.2C37 16.8 36.8 15.8 36.8 15.2C36.8 13.8 37.7 12.7 39.6 12.2C40.1 12.1 41.3 11.8 42.1 11.7C43.5 11.5 43.5 11.5 43.4 11.3C42.9 10.7 40.9 9.9 39.2 9.7C37.9 9.5 38.1 9.5 37.6 9C37 8.6 36.4 8 36 7.9C36 7.8 35.8 7.8 35.7 7.7C35.1 7.3 34.2 7 33.1 6.9C32.6 6.7 31.6 6.9 31 7C29.6 7.3 28.3 8 27.3 9.2C26.7 9.8 26.2 10.8 25.7 11.7C25.5 12.1 24.8 13.4 24.7 13.7C24.6 13.9 24.5 14.1 24.1 14.7C23.5 15.7 22.1 16.9 20.6 17.8C20.5 18 20.3 18.2 20.1 18.3C19.7 18.5 19.4 18.8 19.1 19C18.9 19.1 18.7 19.3 18.5 19.4C18 19.8 17.2 20.3 17 20.5C16.9 20.5 16.8 20.6 16.7 20.7C16.3 20.8 16.1 20.9 16 20.9C15.5 20.8 14.9 20.5 14.2 20.2C13.7 19.8 12.7 18.9 12.4 18.6C12.3 18.5 12.2 18.4 12.1 18.2C11.9 18 11.2 17.1 11 16.6C10.9 16.5 10.8 16.4 10.7 16.3C10.7 16.2 10.6 16.1 10.6 15.9C10.5 15.9 10.4 15.7 10.4 15.6C10.3 15.5 10.2 15.2 10.1 15C10 14.8 9.8 14.4 9.7 14.2C9.6 14 9.5 13.7 9.4 13.6C9.4 13.4 9.3 13.2 9.2 13C9.2 12.8 9 12.6 9 12.5C8.9 12.3 8.7 12.1 8.7 12C8.7 12 8.5 11.7 8.5 11.7C8.3 11.2 8.2 10.9 7.5 10C6.4 8.3 4.2 6.4 2.7 5.8C2 5.5 1.6 5.4 1.5 5.5ZM28.4 16.7C29.2 16.9 29.7 17.2 29.9 17.7C30.1 18.2 30 18.9 29.6 19.4C29.2 19.9 28.2 20.9 27.6 21.2C26.8 21.7 25.3 22.4 24.2 22.7C23.9 22.8 23.6 22.9 23.5 22.9C22.8 23.2 20.7 23.7 19.6 24C19 24.2 18.4 24.3 18.1 24.4C17.9 24.4 16.1 24.9 15.3 25.1C14.6 25.2 14.7 25.1 15.7 23.6C16.4 22.7 18.5 20.6 19.4 19.9C20.8 18.8 21.4 18.4 23.2 17.6C23.8 17.4 25.6 16.8 25.9 16.8C25.9 16.8 26.3 16.8 26.6 16.7C26.8 16.7 28.2 16.7 28.4 16.7ZM30.4 20.2C30.5 20.3 30.6 20.6 30.6 20.7C31.7 23.1 33.4 24.6 35.6 25.3C36.1 25.5 36.7 25.7 37.2 25.8C37.7 25.8 37.8 25.9 37.8 26.1C37.7 26.2 37.7 26.3 37.7 26.5C37.7 26.6 37.7 26.8 37.6 27C37.4 28.5 36.8 29.9 36.1 31C36.1 31.2 35.9 31.4 35.9 31.6C35.7 31.9 35.2 32.6 34.7 33.3C32.6 35.6 29.7 37.3 26.6 37.8C26.5 37.8 26.3 37.9 26.2 37.9C25.8 37.9 23.7 37.9 23.3 37.9C23.2 37.9 23 37.8 22.9 37.8C21.1 37.6 19.3 36.8 18 35.7C17.7 35.4 17 34.7 16.8 34.5C16.3 33.8 16.1 33 16.3 32.5C16.5 31.8 16.8 31.6 17.9 31.1C19.1 30.5 19.4 30.4 20.2 30C21.4 29.4 23.2 28.4 23.9 27.9C23.9 27.8 24.2 27.7 24.5 27.6C26.3 26.3 28 24.6 28.9 22.9C29.5 22.2 29.7 21.6 29.9 20.7C30.1 20 30.2 19.9 30.4 20.2Z"/></svg>`;
+const stroke = (paths, w) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="${w || 1.5}" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+const GLYPH = {
+  refresh: stroke(`<path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2v3h-3"/>`),
+  open: stroke(`<path d="M6 3H3.5A1.5 1.5 0 0 0 2 4.5v8A1.5 1.5 0 0 0 3.5 14h8a1.5 1.5 0 0 0 1.5-1.5V10M9 2h5v5M14 2 8 8"/>`),
+  chev: stroke(`<path d="M4 6l4 4 4-4"/>`, 1.7),
+  alert: stroke(`<circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5M8 11h.01"/>`),
+  generic: stroke(`<path d="M8 2.2 13.2 5.1v5.8L8 13.8 2.8 10.9V5.1Z M8 8v5.8 M2.8 5.1 8 8l5.2-2.9"/>`, 1.4),
+};
+const Glyph = (name, size, color, extra) =>
+  h("Icon", Object.assign({ svg: GLYPH[name], width: size, height: size, fontSize: size, textColor: color || "textMuted", shrink: 0 }, extra || {}));
+
+// magpie serves its logos only with the web key, so they are read here and
+// kept as data; a name that failed to load is remembered as null
+const PNG_ICONS = new Set(["crush", "zcode", "alma", "hanako", "cindy", "lody", "typesafe", "atomcode", "snow", "mlx-serve", "mothx", "zoo-code"]);
+const icons = new Map();
+const DRAWABLE = new Set(["image/svg+xml", "image/png", "image/jpeg", "image/gif", "image/webp"]);
+function iconPath(name) {
+  if (name.startsWith("file:")) return "/api/icons/" + encodeURIComponent(name.slice(5));
+  return "/icons/" + name + (PNG_ICONS.has(name) ? ".png" : ".svg");
+}
+async function loadIcon(name) {
+  try {
+    const res = await fetch(host + iconPath(name), { headers: authHeaders() });
+    const type = (res.headers.get("content-type") || "").split(";")[0].trim();
+    if (!res.ok || !DRAWABLE.has(type)) { await res.body?.cancel(); icons.set(name, null); return; }
+    if (type === "image/svg+xml") {
+      const svg = await res.text();
+      // a logo of its own colours draws as an image; a glyph takes the text colour
+      icons.set(name, /currentColor/.test(svg) || !/fill="#|fill:#|stop-color/.test(svg) ? { svg } : { src: "data:image/svg+xml;base64," + Buffer.from(svg).toString("base64") });
+    } else {
+      icons.set(name, { src: "data:" + type + ";base64," + Buffer.from(await res.arrayBuffer()).toString("base64") });
+    }
+  } catch (e) { icons.set(name, null); }
+}
+async function loadIcons(names) {
+  const want = [...new Set(names.filter(n => n && n !== "generic" && !icons.has(n)))];
+  for (let i = 0; i < want.length; i += 3) await Promise.all(want.slice(i, i + 3).map(loadIcon));
+}
+function Logo(name, size) {
+  const ic = name ? icons.get(name) : null;
+  if (ic && ic.src) return h("Image", { src: ic.src, width: size, height: size, shrink: 0 });
+  if (ic && ic.svg) return h("Icon", { svg: ic.svg, width: size, height: size, fontSize: size, textColor: "text", shrink: 0 });
+  return Glyph("generic", size, "textMuted");
+}
+
+// ---- state ----
+let host = "", key = "", cookieName = "";
+let inputs = {};
+let state = null, quotas = null, usage = null;
+let error = "", loading = false, loadedAt = 0, inflight = null;
+let openAgent = "", showAllAgents = false, busyAgent = "", showBroken = false;
+let lastTitle = "";
+
+function readInputs(env) {
+  inputs = (env && env.inputs) || {};
+  const nextHost = String(inputs.host || "").trim().replace(/\/+$/, "");
+  let nextKey = "";
+  try { nextKey = $metrix.secret("webKey") || ""; } catch (e) { nextKey = ""; }
+  if (nextHost !== host || nextKey !== key) {
+    host = nextHost; key = nextKey;
+    state = quotas = usage = null; loadedAt = 0; error = ""; lastTitle = "";
+    icons.clear();
+  }
+  try {
+    const u = new URL(host);
+    cookieName = "magpie_web_" + (u.port || (u.protocol === "https:" ? "443" : "80"));
+  } catch (e) { cookieName = ""; }
+  const pick = inputs.lang || "auto";
+  const magpieLang = state && state.settings && state.settings.lang;
+  const base = pick === "auto" ? (magpieLang || navigator.language || "en") : pick;
+  lang = String(base).toLowerCase().startsWith("zh") ? "zh" : "en";
+}
+
+// ---- api: the same calls magpie's own page makes ----
+const authHeaders = () => ({ Cookie: cookieName + "=" + key });
+async function api(path, body) {
+  const res = await fetch(host + "/api/" + path, {
+    method: body === undefined ? "GET" : "POST",
+    headers: Object.assign({ "Content-Type": "application/json" }, authHeaders()),
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const text = await res.text();
+  if (res.status === 401 || res.status === 403) throw new Error(t("magpie didn't take the web key (HTTP {status}).", { status: res.status }));
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch (e) { throw new Error(t("magpie answered HTTP {status}.", { status: res.status })); }
+  if (!res.ok) throw new Error((data && data.error) || t("magpie answered HTTP {status}.", { status: res.status }));
+  return data;
+}
+const message = e => String((e && e.message) || e);
+
+async function refresh() {
+  if (inflight) return inflight;
+  loading = true; $metrix.invalidate();
+  inflight = (async () => {
+    try {
+      if (!host || !key || !cookieName) throw new Error(t("Set Magpie URL and Web Key in this dashboard's settings."));
+      const wantUsage = inputs.showUsage === true;
+      const got = await Promise.all([api("state"), api("usage/quotas"), wantUsage ? api("usage?period=today") : null]);
+      state = got[0]; quotas = got[1]; usage = got[2];
+      error = ""; loadedAt = Date.now();
+      readInputs({ inputs });
+      $metrix.invalidate();
+      await loadIcons([...(state.agents || []).map(a => a.icon), ...(quotas || []).map(q => q.icon)]);
+    } catch (e) {
+      error = message(e);
+    } finally { inflight = null; loading = false; $metrix.invalidate(); }
+  })();
+  return inflight;
+}
+const openWeb = () => $metrix.openURL(host + "/?k=" + encodeURIComponent(key));
+
+async function act(agentId, call) {
+  busyAgent = agentId; $metrix.invalidate();
+  try { state = await call(); error = ""; } catch (e) { error = message(e); }
+  busyAgent = ""; $metrix.invalidate();
+}
+const setField = (a, f, value) => act(a.id, () => api("set", { agent: a.id, field: f.key, value }));
+const toggleWired = (a, on) => act(a.id, () => api((on ? "agents/connect/" : "agents/disconnect/") + a.id, {}));
+async function refreshQuota(q) {
+  try {
+    quotas = await api("usage/quotas/refresh?provider=" + encodeURIComponent(q.provider) + (q.user ? "&user=" + encodeURIComponent(q.user) : ""), {});
+    error = "";
+  } catch (e) { error = message(e); }
+  $metrix.invalidate();
+}
+
+// ---- formatting, as magpie writes it ----
+const pad = n => String(n).padStart(2, "0");
+const hhmm = d => pad(d.getHours()) + ":" + pad(d.getMinutes());
+function resetClock(at) {
+  const now = new Date();
+  if (at.toDateString() === now.toDateString()) return hhmm(at);
+  if (at - now < 6 * 864e5) return WEEK[lang][at.getDay()] + " " + hhmm(at);
+  return lang === "zh" ? (at.getMonth() + 1) + "月" + at.getDate() + "日" : MONTH[at.getMonth()] + " " + at.getDate();
+}
+function until(ms) {
+  const m = Math.max(1, Math.round(ms / 6e4)), d = Math.floor(m / 1440), hr = Math.floor(m % 1440 / 60);
+  return d ? d + "d " + hr + "h" : hr ? hr + "h " + (m % 60) + "m" : m + "m";
+}
+function shortWindow(w) {
+  const kind = String(w.trayKind || "");
+  if (kind && !kind.startsWith("name:")) return kind.split(":")[0];
+  const m = String(w.name || "").match(/^(\d+)\s*(hour|day|week|month|minute)/i);
+  return m ? m[1] + { hour: "h", day: "d", week: "w", month: "mo", minute: "m" }[m[2].toLowerCase()] : String(w.name || "");
+}
+const to100 = v => Math.max(0, Math.min(100, Number(v) || 0));
+const quotaLeft = () => !!(state && state.settings && state.settings.quotaLeft);
+const fill = w => { const u = Math.round(to100(w.used)); return quotaLeft() ? 100 - u : u; };
+function money(usd) {
+  const s = (state && state.settings) || {};
+  if (s.currency === "cny" && state.fx && state.fx.rate) return "¥" + (usd * state.fx.rate).toFixed(2);
+  return "$" + Number(usd || 0).toFixed(2);
+}
+function compact(n) {
+  n = Number(n) || 0;
+  if (n >= 1e9) return (n / 1e9).toFixed(2) + "B";
+  if (n >= 1e6) return (n / 1e6).toFixed(n >= 1e8 ? 0 : 1) + "M";
+  if (n >= 1e3) return (n / 1e3).toFixed(n >= 1e5 ? 0 : 1) + "K";
+  return String(n);
+}
+
+// ---- hiding accounts, as magpie's Hide accounts does: addresses and account
+// names blurred into stand-in letters of the same shape; an eye shows one
+// account until the panel closes ----
+const NOT_ACCOUNTS = new Set(["default", "own", "desktop", "account", "main", "local", "unknown", "none", "free", "pro", "api key", "signed in"]);
+const EMAIL = /[\w.+*•-]+@[\w*•-]+(?:\.[\w*•-]+)+/g;
+const IS_EMAIL = new RegExp("^" + EMAIL.source + "$");
+const WORD = /[A-Za-z0-9_]/, JOIN = /[-.]/;
+const low = s => String(s).trim().toLowerCase();
+const revealed = new Set();
+const revealKey = (provider, name) => provider + "\n" + low(name);
+function masking() {
+  const pick = inputs.hideAccounts || "auto";
+  return pick === "auto" ? !!(state && state.settings && state.settings.redactPersonal) : pick === "on";
+}
+function standIn(s) {
+  let n = 7;
+  return s.replace(/[^@.]/g, c => (n = (n * 31 + c.charCodeAt(0)) >>> 0, "aeiounrstlcmdh"[n % 14]));
+}
+const bullets = s => s.replace(s.includes("@") ? /[^@.]/g : /./gu, "•");
+let nameKey = null, finder = EMAIL;
+function accountFinder() {
+  const not = new Set(NOT_ACCOUNTS), all = new Set();
+  for (const q of quotas || []) {
+    for (const n of [q.provider, q.name, q.plan]) if (n) not.add(low(n));
+    if (q.user) all.add(q.user.trim());
+    if (q.alias && q.alias !== q.seat) all.add(q.alias.trim());
+  }
+  for (const a of (state && state.agents) || []) for (const n of [a.id, a.name]) if (n) not.add(low(n));
+  const names = [...all].filter(n => n.length >= 2 && !IS_EMAIL.test(n) && !not.has(low(n))).sort((a, b) => b.length - a.length);
+  const k = names.join("\n");
+  if (k !== nameKey) {
+    nameKey = k;
+    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\// ---- agents ----");
+    finder = names.length ? new RegExp([EMAIL.source, ...names.map(esc)].join("|"), "g") : EMAIL;
+  }
+  return finder;
+}
+const isRevealed = (word, provider) => provider ? revealed.has(revealKey(provider, word)) : [...revealed].some(r => r.endsWith("\n" + low(word)));
+// every account in a line of text, put out of sight; a name inside a longer word is no account
+function hideIn(s, provider) {
+  if (!s || !masking()) return s;
+  const re = accountFinder();
+  re.lastIndex = 0;
+  return String(s).replace(re, (m, ...rest) => {
+    const at = rest[rest.length - 2], src = rest[rest.length - 1], end = at + m.length;
+    if (isRevealed(m, provider)) return m;
+    if (!m.includes("@") && ((WORD.test(m[0]) && (WORD.test(src[at - 1] || "") || JOIN.test(src[at - 1] || "") && WORD.test(src[at - 2] || ""))) ||
+      (WORD.test(m[m.length - 1]) && (WORD.test(src[end] || "") || JOIN.test(src[end] || "") && WORD.test(src[end + 1] || ""))))) return m;
+    return bullets(m);
+  });
+}
+const EYE = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-8 10-8 10 8 10 8-3.5 8-10 8-10-8-10-8zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>`;
+const EYE_OFF = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.2A10.4 10.4 0 0 1 12 4c6.5 0 10 8 10 8a17.6 17.6 0 0 1-2.2 3.2M6.6 6.6C3.9 8.4 2 12 2 12s3.5 8 10 8a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2M2 2l20 20"/></svg>`;
+// the account's own name: blurred stand-in letters, with its eye
+function AccountName(q, who) {
+  const isAccount = !!(q.alias || q.user);
+  if (!isAccount || !masking()) return TX(who, { fontSize: 12.5, singleLine: true, shrink: 1, minWidth: 0 });
+  const names = [q.user, q.alias].filter(Boolean);
+  const shown = names.some(n => revealed.has(revealKey(q.provider, n)));
+  const toggle = () => {
+    for (const n of names) shown ? revealed.delete(revealKey(q.provider, n)) : revealed.add(revealKey(q.provider, n));
+    $metrix.invalidate();
+  };
+  return h("Row", { gap: 4, alignItems: "center", shrink: 1, minWidth: 0 },
+    shown ? TX(who, { fontSize: 12.5, singleLine: true, shrink: 1, minWidth: 0 })
+      : TX(standIn(who), { fontSize: 12.5, singleLine: true, shrink: 1, minWidth: 0, tw: "blur-[2.2px] opacity-50" }),
+    h("Column", {
+      key: "eye:" + q.provider + ":" + names[0], width: 18, height: 18, center: true, radius: 4, shrink: 0, cursor: "pointer",
+      label: t(shown ? "Hide this account" : "Show this account"), tooltip: t(shown ? "Hide this account" : "Show this account"),
+      hover: { background: "surfacePressed" }, onClick: toggle,
+    }, h("Icon", { svg: shown ? EYE : EYE_OFF, width: 13, height: 13, fontSize: 13, textColor: "textMuted" })));
+}
+// ---- agents ----
+const PICKS_IN = { codex: "/model", claude: "/model", opencode: "/models", pi: "/model", droid: "/model", kimi: "/model", grok: "/model", "minimax-code": "/model", dsh: "/model", crush: "ctrl+p", omp: "/model", qwen: "/model", mimocode: "/model" };
+const NO_PICKER = new Set(["gemini", "hermes", "morph", "agy", "muse"]);
+const STALE_SHORT = {
+  app: "Connected · quit and reopen the {agent} app",
+  ide: "Connected · reload the editor's window",
+  daemon: "Connected · restart {agent}'s app-server",
+  embedded: "Connected · reopen {app}",
+  cli: "Connected · restart {agent} in the terminal",
+};
+function statusLine(a) {
+  if (!a.wired && a.cliMissing) return { text: t("Not installed"), tone: "off" };
+  if (!a.wired) return { text: t("Not connected · {agent} uses its own settings", { agent: a.name }), tone: "off" };
+  const copies = a.staleCopies || [];
+  if (a.stale > 0) {
+    if (a.id === "claude") return { text: t("Connected · new sessions take it"), tone: "wait" };
+    if (!copies.length || copies.some(c => !STALE_SHORT[c.kind])) return { text: t("Connected · takes effect once {agent} is reopened", { agent: a.name }), tone: "wait" };
+    const kinds = new Set(copies.map(c => c.kind + "\0" + (c.app || "")));
+    if (kinds.size > 1) return { text: t("Connected · {n} copies of {agent} to reopen", { n: copies.length, agent: a.name }), tone: "wait" };
+    return { text: t(STALE_SHORT[copies[0].kind], { agent: a.name, app: copies[0].app || "" }), tone: "wait" };
+  }
+  if (a.id === "claude") return { text: t("Connected · switch the opus · sonnet · haiku tiers in /model"), tone: "on" };
+  if (NO_PICKER.has(a.id)) return { text: t("Connected · starts on the model picked here"), tone: "on" };
+  if (PICKS_IN[a.id] && a.models) return { text: t("Connected · {n} models in {agent}'s {cmd}", { n: a.models.shown, agent: a.name, cmd: PICKS_IN[a.id] }), tone: "on" };
+  return { text: t("Connected · magpie's models are in {agent}'s model list", { agent: a.name }), tone: "on" };
+}
+const TONE = { on: "success", wait: "warning", bad: "danger", off: "textMuted" };
+const fieldOf = (a, k) => (a.fields || []).find(f => f.key === k);
+const optionFor = (f, v) => (f.options || []).find(o => o.value === v);
+const optionLabel = o => o.group && o.group !== o.label ? o.label + " · " + o.group : (o.label || o.value);
+// magpie's picker lists models by where they come from: one submenu per group
+function modelMenu(f, pick) {
+  const groups = [];
+  for (const o of f.options) {
+    const name = o.group || "";
+    let g = groups.find(x => x.name === name);
+    if (!g) groups.push(g = { name, items: [] });
+    g.items.push({ label: o.label || o.value, checked: o.value === f.value, tooltip: hideIn(o.note), onClick: () => pick(o.value) });
+  }
+  if (groups.length === 1) return groups[0].items;
+  return groups.map(g => ({ label: (g.name || t("default")) + "  " + g.items.length, checked: g.items.some(i => i.checked), items: g.items }));
+}
+
+function AgentRow(a) {
+  const model = fieldOf(a, "model");
+  const opt = model && optionFor(model, model.value);
+  const open = openAgent === a.id;
+  const summary = model ? (opt ? opt.label : model.value) || t("default") : "";
+  const head = h("Row", {
+    key: "head:" + a.id, height: 36, gap: 10, padding: [0, 12], alignItems: "center", fillWidth: true, radius: 9, cursor: "pointer",
+    background: open ? "surfaceHover" : "#00000000", hover: { background: "surfaceHover" }, pressed: { background: "surfacePressed" },
+    tooltip: a.path || a.name, label: a.name,
+    onClick: () => { openAgent = open ? "" : a.id; $metrix.invalidate(); },
+  },
+    Logo(a.icon, 18),
+    TX(a.name, { fontSize: 13, fontWeight: 500, singleLine: true, shrink: 0, maxWidth: 150 }),
+    h("Spacer"),
+    TX(summary, { fontSize: 12, textColor: model && model.value ? "textMuted" : "textMuted", singleLine: true, shrink: 1, minWidth: 0, textAlign: "end" }),
+    Glyph("chev", 10, "textMuted", { transform: { rotate: open ? 0 : -90 }, transition: { duration: 200, ease: "easeInOut" } }));
+  if (!open) return h("Column", { key: a.id, fillWidth: true }, head);
+  return h("Column", { key: a.id, fillWidth: true, radius: 9, background: "surfaceHover" }, head, AgentBody(a));
+}
+
+function AgentBody(a) {
+  const st = statusLine(a);
+  const busy = busyAgent === a.id;
+  const model = fieldOf(a, "model");
+  const effort = fieldOf(a, "effort");
+  const rows = [
+    h("Row", { key: "st", gap: 8, alignItems: "center", fillWidth: true },
+      h("Box", { width: 6, height: 6, radius: 3, background: TONE[st.tone], shrink: 0 }),
+      TX(st.text, { fontSize: 11.5, textColor: "textMuted", grow: 1, shrink: 1, minWidth: 0, singleLine: true, tooltip: st.text }),
+      busy ? h("Spinner", { size: 12 }) : null,
+      a.cliMissing && !a.wired ? null : h("Switch", { value: !!a.wired, disabled: busy, label: a.wired ? t("Disconnect") : t("Connect"), onChange: on => toggleWired(a, on) })),
+  ];
+  if (model && (model.options || []).length) {
+    const cur = optionFor(model, model.value);
+    rows.push(FieldRow("model", t("model"), h("PopoverMenuButton", {
+      label: cur ? optionLabel(cur) : model.value || t("default"), disabled: busy, grow: 1, minWidth: 0,
+      menu: modelMenu(model, v => v !== model.value && setField(a, model, v)),
+    })));
+  }
+  if (effort && (effort.options || []).length) {
+    rows.push(FieldRow("effort", t("effort"), h("Select", {
+      items: effort.options.map(o => ({ label: o.label || o.value, value: o.value })),
+      value: effort.value || "", disabled: busy, grow: 1, minWidth: 0,
+      onChange: v => v !== effort.value && setField(a, effort, v),
+    })));
+  }
+  return h("Column", { key: "body", gap: 8, padding: [2, 12, 12, 40], fillWidth: true }, rows);
+}
+const FieldRow = (k, label, control) =>
+  h("Row", { key: k, gap: 8, alignItems: "center", fillWidth: true },
+    TX(label, { fontSize: 11, textColor: "textMuted", width: 56, singleLine: true, shrink: 0 }), control);
+
+function AgentsSection() {
+  const list = (state && state.agents) || [];
+  const wired = list.filter(a => a.wired), rest = list.filter(a => !a.wired);
+  const fold = list.length > 6 && rest.length > 1 && !showAllAgents;
+  const shown = fold ? wired.concat(rest.filter(a => a.id === openAgent)) : list;
+  const hidden = list.length - shown.length;
+  return h("Column", { key: "agents", gap: 4, fillWidth: true },
+    SectionHead(t("Agents"), list.length),
+    list.length ? h("Column", { gap: 1, fillWidth: true }, shown.map(AgentRow)) : Empty(t("No agents found")),
+    hidden > 0 || showAllAgents && list.length > 6 ? h("Row", {
+      padding: [6, 12], radius: 8, cursor: "pointer", hover: { background: "surfaceHover" },
+      onClick: () => { showAllAgents = !showAllAgents; $metrix.invalidate(); },
+    }, TX(hidden > 0 ? t("Show {n} more", { n: hidden }) : t("Show less"), { fontSize: 12, textColor: "textMuted" })) : null);
+}
+
+// ---- allowances, as magpie's panel cards draw them ----
+// the windows that stop the account: not a single model's tier, nor on-demand spending
+const windowsOf = q => (q.windows || []).filter(w => !w.aside && !w.model && !w.trayExtra && !w.family && !w.unlimited && w.balance == null);
+const pooled = ws => new Set(ws.map(w => w.pool).filter(Boolean)).size > 1;
+function Ring(w, pools) {
+  const used = to100(w.used), p = fill(w);
+  const full = used >= 90;
+  const color = full ? "warning" : "text";
+  const resets = w.resetsAt ? new Date(w.resetsAt) : null;
+  const tip = w.name + " · " + p + "% " + t(quotaLeft() ? "left" : "used") +
+    (resets ? "\n" + t("Resets {when}", { when: resets.toLocaleString() }) : "");
+  return h("Column", { key: (w.pool || "") + ":" + w.name, gap: 3, alignItems: "center", shrink: 0, tooltip: tip },
+    h("Box", {
+      width: 34, height: 34, radius: 17, center: true, border: [3, TRACK],
+      borderConicGradient: { stops: [{ color, at: 0 }, { color, at: p / 100 }, { color: full ? "#f59e0b40" : TRACK, at: p / 100 }, { color: full ? "#f59e0b40" : TRACK, at: 1 }] },
+    }, TX(p + "%", { fontSize: 9, fontWeight: 600, fontFeatures: "tnum", textColor: full ? "text" : "textMuted" })),
+    pools ? h("Column", { alignItems: "center" },
+      TX(String(w.pool).split(/[\s&]/)[0], { fontSize: 9.5, textColor: "textMuted", singleLine: true, maxWidth: 44 }),
+      TX(shortWindow(w), { fontSize: 9.5, textColor: "textMuted", singleLine: true }))
+      : TX(shortWindow(w), { fontSize: 9.5, textColor: "textMuted", singleLine: true, maxWidth: 44 }));
+}
+function resetSay(ws) {
+  const begun = ws.filter(w => w.resetsAt && w.used > 0);
+  if (!begun.length) return ws.some(w => w.used > 0) ? "" : t("Not used yet");
+  return begun.map((w, i) => {
+    const at = new Date(w.resetsAt);
+    if (at <= Date.now()) return t("Reset time passed");
+    return i ? (w.pool && pooled(ws) ? String(w.pool).split(/[\s&]/)[0] + " " : "") + shortWindow(w) + " " + resetClock(at) : t("Resets {when}", { when: resetClock(at) });
+  }).join(" · ");
+}
+function QuotaCard(q, i, logo) {
+  const who = q.alias || q.user || q.name;
+  const all = windowsOf(q), pools = pooled(all);
+  const ws = all.slice(0, pools ? 4 : 3);
+  const unlimited = (q.windows || []).some(w => w.unlimited);
+  let line, lineColor = "textMuted", right = null;
+  if (q.error) { line = hideIn(q.error, q.provider); lineColor = "danger"; }
+  else if (ws.length) { line = resetSay(ws); right = h("Row", { gap: ws.length > 3 ? 7 : 12, shrink: 0 }, ws.map(w => Ring(w, pools))); }
+  else if (unlimited) line = t("Unlimited");
+  else line = "";
+  if (!q.error && q.balance) {
+    if (ws.length) line = [line, t("Balance") + " " + q.balance].filter(Boolean).join(" · ");
+    else right = TX(q.balance, { fontSize: 13, fontWeight: 600, fontFeatures: "tnum", shrink: 0 });
+  }
+  const tip = hideIn([q.name, q.alias, q.user, q.plan, q.balance && t("Balance") + " " + q.balance].filter(Boolean).join(" · ") + (q.error ? "\n" + q.error : ""), q.provider);
+  return h("Row", {
+    key: q.provider + ":" + (q.user || "") + ":" + i, gap: 10, padding: [10, 12], radius: 11, background: "surfaceHover", alignItems: "center", fillWidth: true,
+    tooltip: tip, contextMenu: [{ label: t("Refresh this allowance"), onClick: () => refreshQuota(q) }],
+    opacity: q.asOf ? 0.7 : 1,
+  },
+    logo ? Logo(q.icon, 16) : null,
+    h("Column", { gap: 3, grow: 1, shrink: 1, minWidth: 0 },
+      AccountName(q, who),
+      line ? TX(line, Object.assign({ fontSize: 11, textColor: lineColor, lineHeight: 1.3 }, q.error ? { maxLines: 2 } : { singleLine: true })) : null),
+    right);
+}
+function AllowanceGroup(g) {
+  // a lone card that is the provider itself (a balance) carries its own logo, no heading
+  if (g.cards.length === 1 && !(g.cards[0].alias || g.cards[0].user)) return QuotaCard(g.cards[0], 0, true);
+  return h("Column", { key: g.provider, gap: 6, fillWidth: true },
+    h("Row", { gap: 8, alignItems: "center", padding: [2, 2, 0, 2] },
+      Logo(g.icon, 14),
+      TX(lang === "zh" ? g.name : g.name.toUpperCase(), { fontSize: 10.5, fontWeight: 600, letterSpacing: 0.6, textColor: "textMuted", singleLine: true, shrink: 1, minWidth: 0 }),
+      g.cards.length > 1 ? TX(String(g.cards.length), { fontSize: 9.5, fontWeight: 600, textColor: "textMuted", background: TRACK, radius: 8, padding: [0, 5] }) : null),
+    g.cards.map((q, i) => QuotaCard(q, i, false)));
+}
+function grouped(cards) {
+  const groups = [];
+  for (const q of cards) {
+    let g = groups.find(x => x.provider === q.provider);
+    if (!g) groups.push(g = { provider: q.provider, name: q.name, icon: q.icon, cards: [] });
+    g.cards.push(q);
+  }
+  return groups;
+}
+function AllowancesSection() {
+  const all = quotas || [];
+  const ok = all.filter(q => !q.error && (windowsOf(q).length || q.balance || (q.windows || []).some(w => w.unlimited)));
+  const bad = all.filter(q => q.error);
+  return h("Column", { key: "allowances", gap: 6, fillWidth: true },
+    SectionHead(t("Allowances")),
+    quotas === null ? Skeleton(2) : !all.length ? Empty(t("No allowances yet")) :
+      h("Column", { gap: 8, fillWidth: true }, grouped(ok).map(AllowanceGroup)),
+    bad.length ? h("Row", {
+      key: "bad", gap: 8, padding: [7, 12], radius: 9, alignItems: "center", cursor: "pointer", fillWidth: true,
+      hover: { background: "surfaceHover" }, onClick: () => { showBroken = !showBroken; $metrix.invalidate(); },
+    },
+      Glyph("alert", 13, "danger"),
+      TX(t("{n} accounts can't be read", { n: bad.length }), { fontSize: 12, textColor: "textMuted", grow: 1 }),
+      Glyph("chev", 10, "textMuted", { transform: { rotate: showBroken ? 0 : -90 } })) : null,
+    bad.length && showBroken ? h("Column", { key: "badlist", gap: 6, fillWidth: true }, bad.map((q, i) => QuotaCard(q, i, true))) : null);
+}
+// ---- today's usage ----
+function UsageSection() {
+  const stat = (label, value) => h("Column", { key: label, grow: 1, basis: 0, gap: 2, padding: [8, 10], radius: 10, background: "surfaceHover", minWidth: 0 },
+    TX(value, { fontSize: 15, fontWeight: 600, fontFeatures: "tnum", singleLine: true }),
+    TX(label, { fontSize: 10.5, textColor: "textMuted", singleLine: true }));
+  const u = usage;
+  return h("Column", { key: "usage", gap: 6, fillWidth: true },
+    SectionHead(t("Usage today")),
+    !u ? Skeleton(1) : h("Row", { gap: 6, fillWidth: true },
+      stat(t("Requests"), compact(u.calls)),
+      stat(t("Tokens"), compact((u.input || 0) + (u.output || 0) + (u.cache_read || 0) + (u.cache_write || 0))),
+      stat(t("Cost"), money(u.cost))));
+}
+
+// ---- shared pieces ----
+function SectionHead(title, count) {
+  return h("Row", { gap: 6, alignItems: "center", padding: [4, 2, 0, 2] },
+    TX(lang === "zh" ? title : title.toUpperCase(), { fontSize: 10.5, fontWeight: 600, letterSpacing: 0.7, textColor: "textMuted" }),
+    count ? TX(String(count), { fontSize: 10.5, textColor: "textMuted", fontFeatures: "tnum", opacity: 0.7 }) : null);
+}
+const Empty = text => h("Row", { padding: [10, 12] }, TX(text, { fontSize: 12, textColor: "textMuted" }));
+const bone = (w, hh, r) => h("Box", { width: w, height: hh, radius: r || 4, background: "surfaceHover", shrink: 0 });
+const Skeleton = n => h("Column", { gap: 6, fillWidth: true }, Array.from({ length: n }, (_, i) =>
+  h("Row", { key: String(i), gap: 12, padding: [10, 12], radius: 11, background: "surfaceHover", alignItems: "center", fillWidth: true },
+    h("Column", { gap: 6, grow: 1 }, bone(110, 9), bone(160, 8)), bone(34, 34, 17), bone(34, 34, 17))));
+
+function IconButton(name, label, onClick, spin) {
+  return h("Column", {
+    width: 26, height: 26, center: true, radius: 7, shrink: 0, label, tooltip: label, cursor: "pointer",
+    hover: { background: "surfaceHover" }, pressed: { background: "surfacePressed" }, onClick,
+  }, Glyph(name, 14, "textMuted", spin ? { keyframes: { duration: 900, repeat: -1, ease: "linear", frames: [{ at: 0, rotate: 0 }, { at: 1, rotate: 360 }] } } : null));
+}
+function Header() {
+  return h("Row", { gap: 8, padding: [10, 10, 6, 14], alignItems: "center", fillWidth: true },
+    h("Icon", { svg: BIRD, width: 16, height: 16, fontSize: 16, textColor: "text", shrink: 0 }),
+    TX("magpie", { fontSize: 13.5, fontWeight: 600 }),
+    h("Spacer"),
+    IconButton("refresh", t("Refresh"), () => refresh(), loading),
+    host && key ? IconButton("open", t("Open magpie"), openWeb) : null);
+}
+function Problem() {
+  return h("Column", { grow: 1, center: true, gap: 8, padding: [32, 28] },
+    Glyph("alert", 22, "danger"),
+    TX(t("Couldn't reach magpie"), { fontSize: 14, fontWeight: 600, textAlign: "center" }),
+    TX(error, { fontSize: 12, textColor: "textMuted", textAlign: "center", lineHeight: 1.35 }),
+    h("Row", { margin: [6, 0, 0, 0] }, h("Button", { text: t("Try again"), onClick: () => refresh() })));
+}
+const ErrorBanner = () => error ? h("Row", { gap: 8, padding: [8, 10], radius: 8, background: "surfaceHover", alignItems: "center", fillWidth: true },
+  Glyph("alert", 14, "danger"), TX(error, { fontSize: 12, grow: 1, shrink: 1, minWidth: 0, lineHeight: 1.3 })) : null;
+
+function panelTree() {
+  const sections = [];
+  if (!state && error) return root(Problem());
+  if (inputs.showAgents !== false) sections.push(state ? AgentsSection() : h("Column", { key: "agents", gap: 4 }, SectionHead(t("Agents")), Skeleton(2)));
+  if (inputs.showAllowances !== false) sections.push(AllowancesSection());
+  if (inputs.showUsage === true) sections.push(UsageSection());
+  return root(h("Scroll", { grow: 1, minHeight: 0, fillWidth: true },
+    h("Column", { gap: 14, padding: [2, 10, 14, 10], fillWidth: true }, ErrorBanner(), sections)));
+}
+const root = body => h("Column", {
+  preferredWidth: 340, preferredHeight: 560, fill: true, minHeight: 0, safeArea: true, textColor: "text",
+  shortcuts: { "CmdOrCtrl+R": () => refresh() },
+}, Header(), body);
+
+// ---- the menu bar, as magpie's own reads: "14% · 0%" per card ----
+function trayCards() {
+  const all = quotas || [];
+  const ids = (state && state.settings && state.settings.trayUsages) || [];
+  const named = ids.map(id => all.find(q => (q.user ? q.provider + "|" + q.user : q.provider) === id)).filter(Boolean);
+  if (named.length) return named;
+  const first = all.find(q => !q.error && !q.asOf && windowsOf(q).length);
+  return first ? [first] : [];
+}
+function trayTree() {
+  const word = t(quotaLeft() ? "left" : "used");
+  const cards = trayCards();
+  const labels = [], tips = [];
+  for (const q of cards) {
+    const ws = windowsOf(q);
+    labels.push(ws.slice(0, 2).map(w => fill(w) + "%").join(" · "));
+    tips.push(q.name + (q.user ? " · " + hideIn(q.user, q.provider) : "") + "\n" + ws.map(w => {
+      const at = w.resetsAt ? new Date(w.resetsAt) : null;
+      return w.name + " " + fill(w) + "% " + word + (at && at > Date.now() ? " · " + t("resets in {in}", { in: until(at - Date.now()) }) : "");
+    }).join("\n"));
+  }
+  if (labels.length) lastTitle = labels.join(" | ");
+  return {
+    icon: "data:image/svg+xml," + encodeURIComponent(BIRD),
+    iconTemplate: true,
+    title: inputs.tray === "icon" ? "" : lastTitle,
+    error,
+    tooltip: tips.length ? tips.join("\n\n") : "magpie",
+    menu: [
+      { label: t("Refresh"), onClick: () => refresh() },
+      { label: t("Open magpie"), onClick: openWeb, disabled: !host || !key },
+    ],
+  };
+}
+
+export default {
+  async scheduled(env) {
+    readInputs(env);
+    await refresh();
+  },
+  render(env) {
+    readInputs(env);
+    return { tray: trayTree(), panel: panelTree() };
+  },
+  async event(name, payload) {
+    if (name === "lifecycle" && payload && payload.type === "collapse" && revealed.size) { revealed.clear(); $metrix.invalidate(); }
+    if (name === "lifecycle" && payload && payload.type === "expand" && Date.now() - loadedAt > 30e3) refresh();
+  },
+};
+  ]]></script>
+</bar>
