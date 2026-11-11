@@ -1,0 +1,25 @@
+name: index
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+      - name: Rebuild index.json with the official builder
+        env:
+          BUILDER_SHA256: 2f0c2f2daf02b03b94626a78d21d4322856b59b4e04017c0a22adf2a589e23b1
+        run: |
+          curl -fsS https://metrix.bar/dashboards/build.js -o "$RUNNER_TEMP/build.js"
+          echo "$BUILDER_SHA256  $RUNNER_TEMP/build.js" | sha256sum -c -
+          node "$RUNNER_TEMP/build.js" --input . --output "$RUNNER_TEMP/out" --id thedavidweng --name "David Weng's Dashboards"
+          diff -u "$RUNNER_TEMP/out/index.json" index.json
