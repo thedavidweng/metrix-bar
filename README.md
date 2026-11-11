@@ -6,9 +6,9 @@ My dashboards for [Metrix.Bar](https://metrix.bar/), the menu bar and system tra
 
 ## Dashboards
 
-| Dashboard | Use it to | Install |
-| --- | --- | --- |
-| [Magpie](#magpie) | Control a [magpie](https://github.com/yetone/magpie) running elsewhere: agents, models, and allowances. | [`magpie/magpie.bar`](magpie/magpie.bar) |
+| Dashboard         | Use it to                                                                                               | File                                     |
+| ----------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| [Magpie](magpie/) | Control a [magpie](https://github.com/yetone/magpie) running elsewhere: agents, models, and allowances. | [`magpie/magpie.bar`](magpie/magpie.bar) |
 
 ## Install
 
@@ -34,19 +34,7 @@ You can also import a `.bar` file directly. A direct import does not receive upd
 
 ## Magpie
 
-[`magpie/magpie.bar`](magpie/magpie.bar) controls a magpie that runs somewhere else, such as on a server, from your menu bar. It talks to magpie's web API the same way magpie's own page does.
-
-- Switch each agent's model and reasoning effort, and connect or disconnect agents.
-- See allowances grouped by provider, with a ring for each window and when it resets.
-- The menu bar shows the first allowance's windows, such as `100% · 86%`, used or left as magpie is set to show them.
-- Follows magpie's language (English or Simplified Chinese) and its Hide accounts privacy setting. Both can be changed in the dashboard's settings.
-
-To set it up:
-
-1. Open magpie's web page from the link it prints (magpie web, or Settings › Network and sharing › Browser access in the app). It looks like `http://HOST:PORT/?k=KEY`.
-2. In the dashboard's settings, put `http://HOST:PORT` into **Magpie URL** and `KEY` into **Web Key**.
-
-The key grants full control of that magpie, so keep it private. Metrix.Bar stores it in the system keychain.
+Control a magpie running on another machine from your menu bar: switch agents' models, connect agents, and watch allowances. See [magpie/README.md](magpie/README.md) for screenshots, setup and settings.
 
 ## Add or update a dashboard
 

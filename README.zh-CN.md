@@ -6,9 +6,9 @@
 
 ## 看板
 
-| 看板 | 用途 | 文件 |
-| --- | --- | --- |
-| [Magpie](#magpie) | 控制部署在别处的 [magpie](https://github.com/yetone/magpie)：Agent、模型和额度。 | [`magpie/magpie.bar`](magpie/magpie.bar) |
+| 看板              | 用途                                                                             | 文件                                     |
+| ----------------- | -------------------------------------------------------------------------------- | ---------------------------------------- |
+| [Magpie](magpie/) | 控制部署在别处的 [magpie](https://github.com/yetone/magpie)：Agent、模型和额度。 | [`magpie/magpie.bar`](magpie/magpie.bar) |
 
 ## 安装
 
@@ -34,19 +34,7 @@ metrixbar://install/magpie?registry_url=https%3A%2F%2Fraw.githubusercontent.com%
 
 ## Magpie
 
-[`magpie/magpie.bar`](magpie/magpie.bar) 让你在菜单栏里控制部署在别处（比如服务器上）的 magpie。它和 magpie 自己的网页一样调用 magpie 的 Web API。
-
-- 切换每个 Agent 的模型和推理强度，接入或断开 Agent。
-- 按供应商查看额度，每个窗口一个圆环，并显示重置时间。
-- 菜单栏显示第一项额度的各窗口，比如 `100% · 86%`，显示已用还是剩余跟随 magpie 的设置。
-- 界面语言（English 或简体中文）和账号打码跟随 magpie 的设置，也可以在看板设置里单独修改。
-
-配置方法：
-
-1. 用 magpie 打印的链接打开它的网页（magpie web，或 App 里的 设置 › 网络与共享 › 浏览器访问），链接形如 `http://HOST:PORT/?k=KEY`。
-2. 在看板设置里，把 `http://HOST:PORT` 填进 **Magpie URL**，把 `KEY` 填进 **Web Key**。
-
-这个 Key 能完全控制那台 magpie，请妥善保管。Metrix.Bar 会把它存在系统钥匙串里。
+在菜单栏里控制部署在另一台机器上的 magpie：切换 Agent 的模型、接入 Agent、查看额度。截图、配置和设置项见 [magpie/README.zh-CN.md](magpie/README.zh-CN.md)。
 
 ## 新增或更新看板
 
