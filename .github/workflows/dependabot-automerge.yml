@@ -1,0 +1,19 @@
+name: Dependabot auto-merge
+
+on:
+  pull_request_target: # zizmor: ignore[dangerous-triggers] Metadata only; the called workflow never checks out PR code.
+
+permissions: {}
+
+concurrency:
+  group: dependabot-automerge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  automerge:
+    name: Dependabot
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    permissions:
+      contents: write # enable auto-merge
+      pull-requests: write # approve and enable auto-merge
+    uses: thedavidweng/.github/.github/workflows/dependabot-automerge.yml@9776099353379c9054ce651ec04b5e368d24acd7 # v1.1.1
