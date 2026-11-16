@@ -25,7 +25,7 @@ jobs:
           node-version: lts/*
       - name: Rebuild index.json with the official builder
         env:
-          BUILDER_SHA256: 2f0c2f2daf02b03b94626a78d21d4322856b59b4e04017c0a22adf2a589e23b1
+          BUILDER_SHA256: 1ecb40daa018ba0969f447e6a91bfb671f3bb5eb3aa9c11639608f3ed4185ff7
         run: |
           curl -fsS https://metrix.bar/dashboards/build.js -o "$RUNNER_TEMP/build.js"
           echo "$BUILDER_SHA256  $RUNNER_TEMP/build.js" | sha256sum -c -
