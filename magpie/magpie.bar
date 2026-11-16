@@ -1,7 +1,9 @@
 <bar protocol-version="0"
+     widget="true"
+     min-app-version="0.2.0"
      category="ai"
-     version="1.0.0"
-     description="Control magpie from the menu bar: switch agents' models, connect agents, and watch allowances."
+     version="1.2.0"
+     description="Control magpie on this computer or a server from the menu bar: switch agents' models, connect agents, and watch allowances."
      license="AGPL-3.0-only"
      homepage="https://github.com/yetone/magpie"
      id="magpie"
@@ -12,36 +14,155 @@
 
   <permissions>
     <network origin="{{ inputs.host }}" allow-http="true" />
+    <network origin="http://127.0.0.1:{{ inputs.localPort }}" />
+    <file path="~/.config/magpie/web-page.json" />
   </permissions>
 
   <inputs>
-    <input name="host" type="string" label="Magpie URL" required="true" placeholder="http://192.168.1.20:3430"
-           help="The magpie web address: scheme, host and port only, without the path or `?k=`." />
-    <input name="webKey" type="secret" label="Web Key" required="true"
-           help="The value after `?k=` in the link magpie prints. It grants full control of that magpie, so keep it private." />
+    <input name="source" type="select" label="Connect To" default="local">
+      <locale lang="zh-Hans" label="连接到" />
+      <locale lang="zh-Hant" label="連線到" />
+      <locale lang="ja" label="接続先" />
+      <locale lang="ko" label="연결 대상" />
+      <locale lang="de" label="Verbinden mit" />
+      <option value="local" label="magpie on this computer" >
+        <locale lang="zh-Hans" label="本机上的 magpie" />
+        <locale lang="zh-Hant" label="本機上的 magpie" />
+        <locale lang="ja" label="このコンピュータの magpie" />
+        <locale lang="ko" label="이 컴퓨터의 magpie" />
+        <locale lang="de" label="magpie auf diesem Computer" />
+      </option>
+      <option value="remote" label="magpie elsewhere, by Magpie URL" >
+        <locale lang="zh-Hans" label="通过地址连接其他设备上的 magpie" />
+        <locale lang="zh-Hant" label="透過網址連線至其他裝置上的 magpie" />
+        <locale lang="ja" label="URL で別のコンピュータの magpie に接続" />
+        <locale lang="ko" label="URL로 다른 기기의 magpie에 연결" />
+        <locale lang="de" label="magpie auf einem anderen Gerät per URL" />
+      </option>
+    </input>
+    <input name="localPort" type="string" label="Local Port" default="3430"
+           help="This computer only. The port of magpie's Browser access (Settings › Network and sharing), 3430 unless changed there. Not the gateway's 3425." >
+      <locale lang="zh-Hans" label="本机端口" help="仅本机。填写 magpie 的「设置 › 网络与共享 › 浏览器访问」端口，默认为 3430，不是网关的 3425。" />
+      <locale lang="zh-Hant" label="本機連接埠" help="僅限本機。填入 magpie「設定 › 網路與分享 › 瀏覽器存取」的連接埠，預設為 3430，不是閘道的 3425。" />
+      <locale lang="ja" label="ローカルポート" help="このコンピュータのみ。magpie の「設定 › ネットワークと共有 › ブラウザアクセス」のポートです。既定は 3430 で、ゲートウェイの 3425 ではありません。" />
+      <locale lang="ko" label="로컬 포트" help="이 컴퓨터에서만 사용합니다. magpie의 설정 › 네트워크 및 공유 › 브라우저 액세스 포트입니다. 기본값은 3430이며 게이트웨이의 3425가 아닙니다." />
+      <locale lang="de" label="Lokaler Port" help="Nur dieser Computer. Port des Browserzugriffs in magpie unter Einstellungen › Netzwerk und Freigabe; standardmäßig 3430, nicht der Gateway-Port 3425." />
+    </input>
+    <input name="host" type="string" label="Magpie URL" placeholder="http://192.168.1.20:3430"
+           help="Elsewhere only. The magpie web address: scheme, host and port only, without the path or `?k=`." >
+      <locale lang="zh-Hans" label="Magpie 地址" help="仅远程连接。只填写 magpie 网页地址的协议、主机和端口，不要填写路径或 `?k=`。" />
+      <locale lang="zh-Hant" label="Magpie 網址" help="僅限遠端連線。只填入 magpie 網頁網址的通訊協定、主機和連接埠，不要填路徑或 `?k=`。" />
+      <locale lang="ja" label="Magpie URL" help="リモート接続のみ。magpie の Web アドレスのスキーム、ホスト、ポートのみを入力し、パスや `?k=` は含めないでください。" />
+      <locale lang="ko" label="Magpie URL" help="원격 연결에만 사용합니다. magpie 웹 주소의 스킴, 호스트, 포트만 입력하고 경로나 `?k=`는 제외하세요." />
+      <locale lang="de" label="Magpie-URL" help="Nur für entfernte Verbindungen. Nur Schema, Host und Port der magpie-Webadresse eingeben, ohne Pfad oder `?k=`." />
+    </input>
+    <input name="webKey" type="secret" label="Web Key"
+           help="Elsewhere only. The value after `?k=` in the link magpie prints. It grants full control of that magpie, so keep it private." >
+      <locale lang="zh-Hans" label="网页密钥" help="仅远程连接。magpie 打印的链接中 `?k=` 后面的值。它可以完全控制 magpie，请妥善保管。" />
+      <locale lang="zh-Hant" label="網頁金鑰" help="僅限遠端連線。magpie 印出的連結中 `?k=` 後的值。它可完全控制 magpie，請妥善保管。" />
+      <locale lang="ja" label="Web キー" help="リモート接続のみ。magpie が表示するリンクの `?k=` 以降の値です。magpie を完全に操作できるため、安全に保管してください。" />
+      <locale lang="ko" label="웹 키" help="원격 연결에만 사용합니다. magpie가 표시한 링크에서 `?k=` 뒤의 값입니다. magpie를 완전히 제어할 수 있으므로 안전하게 보관하세요." />
+      <locale lang="de" label="Web-Schlüssel" help="Nur für entfernte Verbindungen. Der Wert nach `?k=` im von magpie ausgegebenen Link gewährt vollständigen Zugriff und muss geheim bleiben." />
+    </input>
     <input name="lang" type="select" label="Language" default="auto">
-      <option value="auto" label="Same as magpie" />
+      <locale lang="zh-Hans" label="语言" />
+      <locale lang="zh-Hant" label="語言" />
+      <locale lang="ja" label="言語" />
+      <locale lang="ko" label="언어" />
+      <locale lang="de" label="Sprache" />
+      <option value="auto" label="Same as magpie" >
+        <locale lang="zh-Hans" label="跟随 magpie" />
+        <locale lang="zh-Hant" label="跟隨 magpie" />
+        <locale lang="ja" label="magpie に合わせる" />
+        <locale lang="ko" label="magpie와 동일" />
+        <locale lang="de" label="Wie magpie" />
+      </option>
       <option value="en" label="English" />
       <option value="zh" label="简体中文" />
+      <option value="zh-TW" label="繁體中文" />
+      <option value="ja" label="日本語" />
+      <option value="ko" label="한국어" />
+      <option value="de" label="Deutsch" />
     </input>
     <input name="hideAccounts" type="select" label="Hide Accounts" default="auto"
            help="Blur email addresses and account names, as magpie's Hide accounts does. Same as magpie follows magpie's Privacy setting.">
-      <option value="auto" label="Same as magpie" />
-      <option value="on" label="On" />
-      <option value="off" label="Off" />
+      <locale lang="zh-Hans" label="隐藏账号" help="模糊电子邮箱和账号名。「跟随 magpie」使用 magpie 的隐私设置。" />
+      <locale lang="zh-Hant" label="隱藏帳號" help="模糊電子郵件和帳號名稱。「跟隨 magpie」使用 magpie 的隱私設定。" />
+      <locale lang="ja" label="アカウントを隠す" help="メールアドレスとアカウント名をぼかします。「magpie に合わせる」は magpie のプライバシー設定に従います。" />
+      <locale lang="ko" label="계정 숨기기" help="이메일 주소와 계정 이름을 흐리게 표시합니다. 「magpie와 동일」은 magpie의 개인정보 설정을 따릅니다." />
+      <locale lang="de" label="Konten verbergen" help="E-Mail-Adressen und Kontonamen unkenntlich machen. „Wie magpie“ folgt der Datenschutzeinstellung von magpie." />
+      <option value="auto" label="Same as magpie" >
+        <locale lang="zh-Hans" label="跟随 magpie" />
+        <locale lang="zh-Hant" label="跟隨 magpie" />
+        <locale lang="ja" label="magpie に合わせる" />
+        <locale lang="ko" label="magpie와 동일" />
+        <locale lang="de" label="Wie magpie" />
+      </option>
+      <option value="on" label="On" >
+        <locale lang="zh-Hans" label="开启" />
+        <locale lang="zh-Hant" label="開啟" />
+        <locale lang="ja" label="オン" />
+        <locale lang="ko" label="켜기" />
+        <locale lang="de" label="Ein" />
+      </option>
+      <option value="off" label="Off" >
+        <locale lang="zh-Hans" label="关闭" />
+        <locale lang="zh-Hant" label="關閉" />
+        <locale lang="ja" label="オフ" />
+        <locale lang="ko" label="끄기" />
+        <locale lang="de" label="Aus" />
+      </option>
     </input>
-    <input name="showAgents" type="bool" label="Show Agents" default="true" />
-    <input name="showAllowances" type="bool" label="Show Allowances" default="true" />
-    <input name="showUsage" type="bool" label="Show Today's Usage" default="false" />
+    <input name="showAgents" type="bool" label="Show Agents" default="true" >
+      <locale lang="zh-Hans" label="显示 Agent" />
+      <locale lang="zh-Hant" label="顯示 Agent" />
+      <locale lang="ja" label="エージェントを表示" />
+      <locale lang="ko" label="에이전트 표시" />
+      <locale lang="de" label="Agenten anzeigen" />
+    </input>
+    <input name="showAllowances" type="bool" label="Show Allowances" default="true" >
+      <locale lang="zh-Hans" label="显示额度" />
+      <locale lang="zh-Hant" label="顯示額度" />
+      <locale lang="ja" label="利用枠を表示" />
+      <locale lang="ko" label="사용 한도 표시" />
+      <locale lang="de" label="Kontingente anzeigen" />
+    </input>
+    <input name="showUsage" type="bool" label="Show Today's Usage" default="false" >
+      <locale lang="zh-Hans" label="显示今日用量" />
+      <locale lang="zh-Hant" label="顯示今日用量" />
+      <locale lang="ja" label="今日の使用量を表示" />
+      <locale lang="ko" label="오늘 사용량 표시" />
+      <locale lang="de" label="Heutige Nutzung anzeigen" />
+    </input>
     <input name="tray" type="select" label="Menu Bar Shows" default="allowance">
-      <option value="allowance" label="Allowance, as magpie's menu bar does" />
-      <option value="icon" label="Icon only" />
+      <locale lang="zh-Hans" label="菜单栏显示" />
+      <locale lang="zh-Hant" label="選單列顯示" />
+      <locale lang="ja" label="メニューバーの表示" />
+      <locale lang="ko" label="메뉴 막대 표시" />
+      <locale lang="de" label="Menüleistenanzeige" />
+      <option value="allowance" label="Allowance, as magpie's menu bar does" >
+        <locale lang="zh-Hans" label="额度，与 magpie 菜单栏一致" />
+        <locale lang="zh-Hant" label="額度，與 magpie 選單列一致" />
+        <locale lang="ja" label="magpie のメニューバーと同じ利用枠" />
+        <locale lang="ko" label="magpie 메뉴 막대와 같은 사용 한도" />
+        <locale lang="de" label="Kontingent wie in der magpie-Menüleiste" />
+      </option>
+      <option value="icon" label="Icon only" >
+        <locale lang="zh-Hans" label="仅图标" />
+        <locale lang="zh-Hant" label="僅圖示" />
+        <locale lang="ja" label="アイコンのみ" />
+        <locale lang="ko" label="아이콘만" />
+        <locale lang="de" label="Nur Symbol" />
+      </option>
     </input>
   </inputs>
 
-  <docs><![CDATA[Connects to a magpie you run elsewhere, such as on a server.
+  <docs><![CDATA[Connects to the magpie app on this computer, or to a magpie you run elsewhere, such as on a server.
 
-1. Open magpie's web page from the link it prints (magpie web, or Settings › Network and sharing › Browser access in the app). The link looks like http://HOST:PORT/?k=KEY.
+This computer (the default): in magpie, set Settings › Network and sharing › Browser access to This computer. The dashboard reads the page's port and key from ~/.config/magpie/web-page.json, so there is nothing to copy, and a new key in magpie is picked up on the next refresh. If you changed the page's port there, put the same port into Local Port.
+
+Elsewhere: set Connect To to magpie elsewhere.
+1. Open magpie's web page from the link it prints (magpie web, or Browser access in the app). The link looks like http://HOST:PORT/?k=KEY.
 2. Put http://HOST:PORT into Magpie URL and KEY into Web Key.
 
 The key grants full control of that magpie, so keep it private. Plain HTTP is allowed for Magpie URL only, since magpie web usually runs on a home network or tailnet without HTTPS. Which sections the panel shows, its language and the menu bar text are in these settings too.]]></docs>
@@ -54,61 +175,283 @@ const TX = (text, props) => h("Text", props, String(text));
 const TRACK = "#8080802e";
 
 // ---- i18n: keys are magpie's own English strings, zh is magpie's own wording ----
-const ZH = {
-  "Agents": "Agent",
-  "Allowances": "额度",
-  "Usage today": "今日用量",
-  "Refresh": "刷新",
-  "Open magpie": "打开 magpie",
-  "Show {n} more": "显示其余 {n} 个",
-  "Show less": "收起",
-  "No agents found": "没有找到 Agent",
-  "No allowances yet": "还没有额度",
-  "model": "模型",
-  "effort": "推理强度",
-  "default": "默认",
-  "Connect": "接入",
-  "Disconnect": "断开",
-  "Not used yet": "还没用过",
-  "Resets {when}": "重置于 {when}",
-  "Reset time passed": "重置时间已过",
-  "Unlimited": "无限",
-  "Balance": "余额",
-  "Requests": "请求",
-  "Tokens": "Token",
-  "Cost": "费用",
-  "used": "已用",
-  "left": "剩余",
-  "resets in {in}": "{in}后重置",
-  "Not installed": "未安装",
-  "Not connected · {agent} uses its own settings": "未接入 · 用 {agent} 自己的设置",
-  "Connected · magpie's models are in {agent}'s model list": "已接入 · magpie 的模型在 {agent} 的模型列表里",
-  "Connected · {n} models in {agent}'s {cmd}": "已接入 · {agent} 的 {cmd} 里有 {n} 个模型",
-  "Connected · starts on the model picked here": "已接入 · 用这里选的模型启动",
-  "Connected · takes effect once {agent} is reopened": "已接入 · 重开 {agent} 后生效",
-  "Connected · {n} copies of {agent} to reopen": "已接入 · {n} 个运行中的 {agent} 待重开",
-  "Connected · quit and reopen the {agent} app": "已接入 · 退出并重开 {agent} 应用后生效",
-  "Connected · reload the editor's window": "已接入 · 重新加载编辑器窗口后生效",
-  "Connected · restart {agent}'s app-server": "已接入 · 重启 {agent} 的后台 app-server 后生效",
-  "Connected · restart {agent} in the terminal": "已接入 · 重启终端里的 {agent} 后生效",
-  "Connected · reopen {app}": "已接入 · 重开 {app} 后生效",
-  "Connected · new sessions take it": "已接入 · 新开的会话生效",
-  "Connected · switch the opus · sonnet · haiku tiers in /model": "已接入 · 在 /model 里切换 opus · sonnet · haiku 档位",
-  "Couldn't reach magpie": "连不上 magpie",
-  "Try again": "重试",
-  "Set Magpie URL and Web Key in this dashboard's settings.": "请在这个看板的设置里填写 Magpie URL 和 Web Key。",
-  "magpie didn't take the web key (HTTP {status}).": "magpie 不接受这个 Web Key（HTTP {status}）。",
-  "magpie answered HTTP {status}.": "magpie 返回了 HTTP {status}。",
-  "Refresh this allowance": "刷新这项额度",
-  "{n} accounts can't be read": "{n} 个账号读不到额度",
-  "Show this account": "显示这个账号",
-  "Hide this account": "重新给这个账号打码",
+const WORDS = {
+  "zh": {
+    "Loading allowances…": "正在加载额度…",
+    "Agents": "Agent",
+    "Allowances": "额度",
+    "Usage today": "今日用量",
+    "Refresh": "刷新",
+    "Open magpie": "打开 magpie",
+    "Show {n} more": "显示其余 {n} 个",
+    "Show less": "收起",
+    "No agents found": "没有找到 Agent",
+    "No allowances yet": "还没有额度",
+    "model": "模型",
+    "effort": "推理强度",
+    "default": "默认",
+    "Connect": "接入",
+    "Disconnect": "断开",
+    "Not used yet": "还没用过",
+    "Resets {when}": "重置于 {when}",
+    "Reset time passed": "重置时间已过",
+    "Unlimited": "无限",
+    "Balance": "余额",
+    "Requests": "请求",
+    "Tokens": "Token",
+    "Cost": "费用",
+    "used": "已用",
+    "left": "剩余",
+    "resets in {in}": "{in}后重置",
+    "Not installed": "未安装",
+    "Not connected · {agent} uses its own settings": "未接入 · 用 {agent} 自己的设置",
+    "Connected · magpie's models are in {agent}'s model list": "已接入 · magpie 的模型在 {agent} 的模型列表里",
+    "Connected · {n} models in {agent}'s {cmd}": "已接入 · {agent} 的 {cmd} 里有 {n} 个模型",
+    "Connected · starts on the model picked here": "已接入 · 用这里选的模型启动",
+    "Connected · takes effect once {agent} is reopened": "已接入 · 重开 {agent} 后生效",
+    "Connected · {n} copies of {agent} to reopen": "已接入 · {n} 个运行中的 {agent} 待重开",
+    "Connected · quit and reopen the {agent} app": "已接入 · 退出并重开 {agent} 应用后生效",
+    "Connected · reload the editor's window": "已接入 · 重新加载编辑器窗口后生效",
+    "Connected · restart {agent}'s app-server": "已接入 · 重启 {agent} 的后台 app-server 后生效",
+    "Connected · restart {agent} in the terminal": "已接入 · 重启终端里的 {agent} 后生效",
+    "Connected · reopen {app}": "已接入 · 重开 {app} 后生效",
+    "Connected · new sessions take it": "已接入 · 新开的会话生效",
+    "Connected · switch the opus · sonnet · haiku tiers in /model": "已接入 · 在 /model 里切换 opus · sonnet · haiku 档位",
+    "Couldn't reach magpie": "连不上 magpie",
+    "Try again": "重试",
+    "Set Magpie URL and Web Key in this dashboard's settings.": "请在这个看板的设置里填写 Magpie URL 和 Web Key。",
+    "In magpie, set Settings › Network and sharing › Browser access to This computer.": "请在 magpie 的 设置 › 网络与共享 › 浏览器访问 里选择“本机”。",
+    "magpie's page is on port {port}: put {port} into Local Port in this dashboard's settings.": "magpie 的网页在 {port} 端口上：请在这个看板的设置里把本机端口改成 {port}。",
+    "Couldn't read {file}: {why}": "读不了 {file}：{why}",
+    "magpie didn't take the web key (HTTP {status}).": "magpie 不接受这个网页密钥（HTTP {status}）。",
+    "magpie answered HTTP {status}.": "magpie 返回了 HTTP {status}。",
+    "Refresh this allowance": "刷新这项额度",
+    "{n} accounts can't be read": "{n} 个账号读不到额度",
+    "Show this account": "显示这个账号",
+    "Hide this account": "重新给这个账号打码"
+  },
+  "zh-TW": {
+    "Loading allowances…": "正在載入額度…",
+    "Agents": "Agent",
+    "Allowances": "額度",
+    "Usage today": "今日用量",
+    "Refresh": "重新整理",
+    "Open magpie": "開啟 magpie",
+    "Show {n} more": "顯示其餘 {n} 個",
+    "Show less": "收起",
+    "No agents found": "沒有找到 Agent",
+    "No allowances yet": "還沒有額度",
+    "model": "模型",
+    "effort": "推理強度",
+    "default": "預設",
+    "Connect": "接入",
+    "Disconnect": "斷開",
+    "Not used yet": "還沒用過",
+    "Resets {when}": "重置於 {when}",
+    "Reset time passed": "重置時間已過",
+    "Unlimited": "無限",
+    "Balance": "餘額",
+    "Requests": "請求",
+    "Tokens": "Token",
+    "Cost": "費用",
+    "used": "已用",
+    "left": "剩餘",
+    "resets in {in}": "{in}後重置",
+    "Not installed": "未安裝",
+    "Not connected · {agent} uses its own settings": "未接入 · 用 {agent} 自己的設定",
+    "Connected · magpie's models are in {agent}'s model list": "已接入 · magpie 的模型在 {agent} 的模型列表裡",
+    "Connected · {n} models in {agent}'s {cmd}": "已接入 · {agent} 的 {cmd} 裡有 {n} 個模型",
+    "Connected · starts on the model picked here": "已接入 · 用這裡選的模型啟動",
+    "Connected · takes effect once {agent} is reopened": "已接入 · 重開 {agent} 後生效",
+    "Connected · {n} copies of {agent} to reopen": "已接入 · {n} 個執行中的 {agent} 待重開",
+    "Connected · quit and reopen the {agent} app": "已接入 · 結束並重開 {agent} 應用程式後生效",
+    "Connected · reload the editor's window": "已接入 · 重新載入編輯器視窗後生效",
+    "Connected · restart {agent}'s app-server": "已接入 · 重新啟動 {agent} 的背景 app-server 後生效",
+    "Connected · restart {agent} in the terminal": "已接入 · 重新啟動終端機裡的 {agent} 後生效",
+    "Connected · reopen {app}": "已接入 · 重開 {app} 後生效",
+    "Connected · new sessions take it": "已接入 · 新開的會話生效",
+    "Connected · switch the opus · sonnet · haiku tiers in /model": "已接入 · 在 /model 裡切換 opus · sonnet · haiku 檔位",
+    "Couldn't reach magpie": "連不上 magpie",
+    "Try again": "重試",
+    "Set Magpie URL and Web Key in this dashboard's settings.": "請在這個看板的設定中填入 Magpie 網址和網頁金鑰。",
+    "In magpie, set Settings › Network and sharing › Browser access to This computer.": "請在 magpie 的「設定 › 網路與分享 › 瀏覽器存取」中選擇「本機」。",
+    "magpie's page is on port {port}: put {port} into Local Port in this dashboard's settings.": "magpie 的網頁使用連接埠 {port}：請在看板設定中將本機連接埠改為 {port}。",
+    "Couldn't read {file}: {why}": "無法讀取 {file}：{why}",
+    "magpie didn't take the web key (HTTP {status}).": "magpie 不接受這個網頁金鑰（HTTP {status}）。",
+    "magpie answered HTTP {status}.": "magpie 回傳了 HTTP {status}。",
+    "Refresh this allowance": "重新整理這項額度",
+    "{n} accounts can't be read": "無法讀取 {n} 個帳號的額度",
+    "Show this account": "顯示這個帳號",
+    "Hide this account": "重新給這個帳號打碼"
+  },
+  "ja": {
+    "Loading allowances…": "利用枠を読み込み中…",
+    "Agents": "エージェント",
+    "Allowances": "利用枠",
+    "Usage today": "今日の使用量",
+    "Refresh": "更新",
+    "Open magpie": "magpie を開く",
+    "Show {n} more": "さらに {n} 件表示",
+    "Show less": "表示を減らす",
+    "No agents found": "エージェントが見つかりません",
+    "No allowances yet": "利用枠はまだありません",
+    "model": "モデル",
+    "effort": "推論レベル",
+    "default": "デフォルト",
+    "Connect": "接続",
+    "Disconnect": "切断",
+    "Not used yet": "未使用",
+    "Resets {when}": "{when} にリセット",
+    "Reset time passed": "リセット時刻を過ぎました",
+    "Unlimited": "無制限",
+    "Balance": "残高",
+    "Requests": "リクエスト",
+    "Tokens": "トークン",
+    "Cost": "費用",
+    "used": "使用済み",
+    "left": "残り",
+    "resets in {in}": "{in} 後にリセット",
+    "Not installed": "未インストール",
+    "Not connected · {agent} uses its own settings": "未接続 · {agent} は独自の設定を使用",
+    "Connected · magpie's models are in {agent}'s model list": "接続済み · magpie のモデルは {agent} のモデル一覧にあります",
+    "Connected · {n} models in {agent}'s {cmd}": "接続済み · {agent} の {cmd} に {n} モデル",
+    "Connected · starts on the model picked here": "接続済み · ここで選んだモデルで起動",
+    "Connected · takes effect once {agent} is reopened": "接続済み · {agent} を開き直すと反映されます",
+    "Connected · {n} copies of {agent} to reopen": "接続済み · {agent} {n} 件を開き直す",
+    "Connected · quit and reopen the {agent} app": "接続済み · {agent} アプリを終了して開き直す",
+    "Connected · reload the editor's window": "接続済み · エディタのウィンドウを再読み込み",
+    "Connected · restart {agent}'s app-server": "接続済み · {agent} の app-server を再起動",
+    "Connected · restart {agent} in the terminal": "接続済み · ターミナルの {agent} を再起動",
+    "Connected · reopen {app}": "接続済み · {app} を開き直す",
+    "Connected · new sessions take it": "接続済み · 新しいセッションから反映",
+    "Connected · switch the opus · sonnet · haiku tiers in /model": "接続済み · /model で opus · sonnet · haiku の階層を切り替え",
+    "Couldn't reach magpie": "magpie に接続できません",
+    "Try again": "再試行",
+    "Set Magpie URL and Web Key in this dashboard's settings.": "このダッシュボードの設定で Magpie URL と Web キーを入力してください。",
+    "In magpie, set Settings › Network and sharing › Browser access to This computer.": "magpie の「設定 › ネットワークと共有 › ブラウザアクセス」で「このコンピュータ」を選択してください。",
+    "magpie's page is on port {port}: put {port} into Local Port in this dashboard's settings.": "magpie のページはポート {port} を使用しています。ダッシュボード設定のローカルポートを {port} にしてください。",
+    "Couldn't read {file}: {why}": "{file} を読み取れません：{why}",
+    "magpie didn't take the web key (HTTP {status}).": "magpie が Web キーを受け付けません（HTTP {status}）。",
+    "magpie answered HTTP {status}.": "magpie が HTTP {status} を返しました。",
+    "Refresh this allowance": "この利用枠を更新",
+    "{n} accounts can't be read": "{n} 件のアカウントを読み取れません",
+    "Show this account": "このアカウントを表示",
+    "Hide this account": "このアカウントを再び隠す"
+  },
+  "ko": {
+    "Loading allowances…": "사용 한도를 불러오는 중…",
+    "Agents": "에이전트",
+    "Allowances": "사용 한도",
+    "Usage today": "오늘 사용량",
+    "Refresh": "새로고침",
+    "Open magpie": "magpie 열기",
+    "Show {n} more": "{n}개 더 보기",
+    "Show less": "접기",
+    "No agents found": "에이전트가 없습니다",
+    "No allowances yet": "사용 한도가 없습니다",
+    "model": "모델",
+    "effort": "추론 수준",
+    "default": "기본값",
+    "Connect": "연결",
+    "Disconnect": "연결 해제",
+    "Not used yet": "아직 사용하지 않음",
+    "Resets {when}": "{when}에 초기화",
+    "Reset time passed": "초기화 시간이 지남",
+    "Unlimited": "무제한",
+    "Balance": "잔액",
+    "Requests": "요청",
+    "Tokens": "토큰",
+    "Cost": "비용",
+    "used": "사용",
+    "left": "남음",
+    "resets in {in}": "{in} 후 초기화",
+    "Not installed": "설치되지 않음",
+    "Not connected · {agent} uses its own settings": "연결되지 않음 · {agent}의 자체 설정 사용",
+    "Connected · magpie's models are in {agent}'s model list": "연결됨 · {agent}의 모델 목록에서 magpie 모델 사용 가능",
+    "Connected · {n} models in {agent}'s {cmd}": "연결됨 · {agent}의 {cmd}에 모델 {n}개",
+    "Connected · starts on the model picked here": "연결됨 · 여기서 선택한 모델로 시작",
+    "Connected · takes effect once {agent} is reopened": "연결됨 · {agent}를 다시 열면 적용됨",
+    "Connected · {n} copies of {agent} to reopen": "연결됨 · {agent} {n}개를 다시 열어야 함",
+    "Connected · quit and reopen the {agent} app": "연결됨 · {agent} 앱을 종료하고 다시 여세요",
+    "Connected · reload the editor's window": "연결됨 · 편집기 창을 다시 불러오세요",
+    "Connected · restart {agent}'s app-server": "연결됨 · {agent}의 app-server를 다시 시작하세요",
+    "Connected · restart {agent} in the terminal": "연결됨 · 터미널에서 {agent}를 다시 시작하세요",
+    "Connected · reopen {app}": "연결됨 · {app}을(를) 다시 여세요",
+    "Connected · new sessions take it": "연결됨 · 새 세션부터 적용",
+    "Connected · switch the opus · sonnet · haiku tiers in /model": "연결됨 · /model에서 opus · sonnet · haiku 단계 전환",
+    "Couldn't reach magpie": "magpie에 연결할 수 없습니다",
+    "Try again": "다시 시도",
+    "Set Magpie URL and Web Key in this dashboard's settings.": "대시보드 설정에 Magpie URL과 웹 키를 입력하세요.",
+    "In magpie, set Settings › Network and sharing › Browser access to This computer.": "magpie의 설정 › 네트워크 및 공유 › 브라우저 액세스에서 「이 컴퓨터」를 선택하세요.",
+    "magpie's page is on port {port}: put {port} into Local Port in this dashboard's settings.": "magpie 페이지가 포트 {port}를 사용합니다. 대시보드 설정의 로컬 포트를 {port}(으)로 바꾸세요.",
+    "Couldn't read {file}: {why}": "{file}을(를) 읽을 수 없습니다: {why}",
+    "magpie didn't take the web key (HTTP {status}).": "magpie가 웹 키를 거부했습니다(HTTP {status}).",
+    "magpie answered HTTP {status}.": "magpie가 HTTP {status}을(를) 반환했습니다.",
+    "Refresh this allowance": "이 사용 한도 새로고침",
+    "{n} accounts can't be read": "계정 {n}개의 사용 한도를 읽을 수 없습니다",
+    "Show this account": "이 계정 표시",
+    "Hide this account": "이 계정 다시 숨기기"
+  },
+  "de": {
+    "Loading allowances…": "Kontingente werden geladen…",
+    "Agents": "Agenten",
+    "Allowances": "Kontingente",
+    "Usage today": "Heutige Nutzung",
+    "Refresh": "Aktualisieren",
+    "Open magpie": "magpie öffnen",
+    "Show {n} more": "{n} weitere anzeigen",
+    "Show less": "Weniger anzeigen",
+    "No agents found": "Keine Agenten gefunden",
+    "No allowances yet": "Noch keine Kontingente",
+    "model": "Modell",
+    "effort": "Reasoning-Effort",
+    "default": "Standard",
+    "Connect": "Verbinden",
+    "Disconnect": "Trennen",
+    "Not used yet": "Noch nicht verwendet",
+    "Resets {when}": "Zurückgesetzt {when}",
+    "Reset time passed": "Rücksetzzeitpunkt überschritten",
+    "Unlimited": "Unbegrenzt",
+    "Balance": "Guthaben",
+    "Requests": "Anfragen",
+    "Tokens": "Token",
+    "Cost": "Kosten",
+    "used": "verbraucht",
+    "left": "übrig",
+    "resets in {in}": "Zurücksetzen in {in}",
+    "Not installed": "Nicht installiert",
+    "Not connected · {agent} uses its own settings": "Nicht verbunden · {agent} nutzt eigene Einstellungen",
+    "Connected · magpie's models are in {agent}'s model list": "Verbunden · magpie-Modelle stehen in der Modellliste von {agent}",
+    "Connected · {n} models in {agent}'s {cmd}": "Verbunden · {n} Modelle in {cmd} von {agent}",
+    "Connected · starts on the model picked here": "Verbunden · startet mit dem hier gewählten Modell",
+    "Connected · takes effect once {agent} is reopened": "Verbunden · wirksam, sobald {agent} neu geöffnet wird",
+    "Connected · {n} copies of {agent} to reopen": "Verbunden · {n} {agent}-Instanzen neu zu öffnen",
+    "Connected · quit and reopen the {agent} app": "Verbunden · {agent}-App beenden und neu öffnen",
+    "Connected · reload the editor's window": "Verbunden · Editorfenster neu laden",
+    "Connected · restart {agent}'s app-server": "Verbunden · app-server von {agent} neu starten",
+    "Connected · restart {agent} in the terminal": "Verbunden · {agent} im Terminal neu starten",
+    "Connected · reopen {app}": "Verbunden · {app} neu öffnen",
+    "Connected · new sessions take it": "Verbunden · gilt für neue Sitzungen",
+    "Connected · switch the opus · sonnet · haiku tiers in /model": "Verbunden · Stufen opus · sonnet · haiku in /model wechseln",
+    "Couldn't reach magpie": "magpie nicht erreichbar",
+    "Try again": "Erneut versuchen",
+    "Set Magpie URL and Web Key in this dashboard's settings.": "Magpie-URL und Web-Schlüssel in den Dashboard-Einstellungen eingeben.",
+    "In magpie, set Settings › Network and sharing › Browser access to This computer.": "In magpie unter Einstellungen › Netzwerk und Freigabe › Browserzugriff „Dieser Computer“ auswählen.",
+    "magpie's page is on port {port}: put {port} into Local Port in this dashboard's settings.": "Die magpie-Seite verwendet Port {port}. In den Dashboard-Einstellungen den lokalen Port auf {port} setzen.",
+    "Couldn't read {file}: {why}": "{file} konnte nicht gelesen werden: {why}",
+    "magpie didn't take the web key (HTTP {status}).": "magpie hat den Web-Schlüssel abgelehnt (HTTP {status}).",
+    "magpie answered HTTP {status}.": "magpie antwortete mit HTTP {status}.",
+    "Refresh this allowance": "Dieses Kontingent aktualisieren",
+    "{n} accounts can't be read": "{n} Konten können nicht gelesen werden",
+    "Show this account": "Dieses Konto zeigen",
+    "Hide this account": "Dieses Konto wieder verbergen"
+  }
 };
-const WEEK = { en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], zh: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"] };
+const WEEK = { en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], zh: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], "zh-TW": ["週日", "週一", "週二", "週三", "週四", "週五", "週六"], ja: ["日", "月", "火", "水", "木", "金", "土"], ko: ["일", "월", "화", "수", "목", "금", "토"], de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"] };
 const MONTH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let lang = "en";
 function t(key, vars) {
-  let s = (lang === "zh" && ZH[key]) || key;
+  let s = (WORDS[lang] && WORDS[lang][key]) || key;
   for (const k in vars || {}) s = s.split("{" + k + "}").join(String(vars[k]));
   return s;
 }
@@ -169,11 +512,7 @@ let error = "", loading = false, loadedAt = 0, inflight = null;
 let openAgent = "", showAllAgents = false, busyAgent = "", showBroken = false;
 let lastTitle = "";
 
-function readInputs(env) {
-  inputs = (env && env.inputs) || {};
-  const nextHost = String(inputs.host || "").trim().replace(/\/+$/, "");
-  let nextKey = "";
-  try { nextKey = $metrix.secret("webKey") || ""; } catch (e) { nextKey = ""; }
+function connect(nextHost, nextKey) {
   if (nextHost !== host || nextKey !== key) {
     host = nextHost; key = nextKey;
     state = quotas = usage = null; loadedAt = 0; error = ""; lastTitle = "";
@@ -183,10 +522,37 @@ function readInputs(env) {
     const u = new URL(host);
     cookieName = "magpie_web_" + (u.port || (u.protocol === "https:" ? "443" : "80"));
   } catch (e) { cookieName = ""; }
+}
+
+// the magpie app keeps its Browser access page's choice, port and key here
+// (apppage.go, web-page.json); it is read each refresh so a new key is taken
+const PAGE_FILE = "~/.config/magpie/web-page.json";
+const LOCAL = "http://127.0.0.1:";
+const local = () => inputs.source !== "remote";
+async function readLocalPage() {
+  let text;
+  try { text = await $metrix.readFile(PAGE_FILE); }
+  catch (e) { throw new Error(t("In magpie, set Settings › Network and sharing › Browser access to This computer.")); }
+  let page;
+  try { page = JSON.parse(text); }
+  catch (e) { throw new Error(t("Couldn't read {file}: {why}", { file: PAGE_FILE, why: message(e) })); }
+  if (!page.mode || !page.key) throw new Error(t("In magpie, set Settings › Network and sharing › Browser access to This computer."));
+  const port = String(page.port || 3430);
+  if (port !== String(inputs.localPort || "").trim()) throw new Error(t("magpie's page is on port {port}: put {port} into Local Port in this dashboard's settings.", { port }));
+  connect(LOCAL + port, page.key);
+}
+
+function readInputs(env) {
+  inputs = (env && env.inputs) || {};
+  if (!local()) {
+    let nextKey = "";
+    try { nextKey = $metrix.secret("webKey") || ""; } catch (e) { nextKey = ""; }
+    connect(String(inputs.host || "").trim().replace(/\/+$/, ""), nextKey);
+  } else if (!host.startsWith(LOCAL)) connect("", "");
   const pick = inputs.lang || "auto";
   const magpieLang = state && state.settings && state.settings.lang;
-  const base = pick === "auto" ? (magpieLang || navigator.language || "en") : pick;
-  lang = String(base).toLowerCase().startsWith("zh") ? "zh" : "en";
+  const base = String(pick === "auto" ? (!magpieLang || magpieLang === "system" ? navigator.language : magpieLang) : pick).toLowerCase().replace(/_/g, "-");
+  lang = /^zh-(hant|tw|hk|mo)(-|$)/.test(base) ? "zh-TW" : /^zh/.test(base) ? "zh" : /^ja/.test(base) ? "ja" : /^ko/.test(base) ? "ko" : /^de/.test(base) ? "de" : "en";
 }
 
 // ---- api: the same calls magpie's own page makes ----
@@ -211,6 +577,7 @@ async function refresh() {
   loading = true; $metrix.invalidate();
   inflight = (async () => {
     try {
+      if (local()) await readLocalPage();
       if (!host || !key || !cookieName) throw new Error(t("Set Magpie URL and Web Key in this dashboard's settings."));
       const wantUsage = inputs.showUsage === true;
       const got = await Promise.all([api("state"), api("usage/quotas"), wantUsage ? api("usage?period=today") : null]);
@@ -249,7 +616,10 @@ function resetClock(at) {
   const now = new Date();
   if (at.toDateString() === now.toDateString()) return hhmm(at);
   if (at - now < 6 * 864e5) return WEEK[lang][at.getDay()] + " " + hhmm(at);
-  return lang === "zh" ? (at.getMonth() + 1) + "月" + at.getDate() + "日" : MONTH[at.getMonth()] + " " + at.getDate();
+  if (lang === "zh" || lang === "zh-TW" || lang === "ja") return (at.getMonth() + 1) + "月" + at.getDate() + "日";
+  if (lang === "ko") return (at.getMonth() + 1) + "월 " + at.getDate() + "일";
+  if (lang === "de") return at.getDate() + "." + (at.getMonth() + 1) + ".";
+  return MONTH[at.getMonth()] + " " + at.getDate();
 }
 function until(ms) {
   const m = Math.max(1, Math.round(ms / 6e4)), d = Math.floor(m / 1440), hr = Math.floor(m % 1440 / 60);
@@ -309,7 +679,7 @@ function accountFinder() {
   const k = names.join("\n");
   if (k !== nameKey) {
     nameKey = k;
-    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\// ---- agents ----");
+    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     finder = names.length ? new RegExp([EMAIL.source, ...names.map(esc)].join("|"), "g") : EMAIL;
   }
   return finder;
@@ -427,14 +797,14 @@ function AgentBody(a) {
   if (model && (model.options || []).length) {
     const cur = optionFor(model, model.value);
     rows.push(FieldRow("model", t("model"), h("PopoverMenuButton", {
-      label: cur ? optionLabel(cur) : model.value || t("default"), disabled: busy, grow: 1, minWidth: 0,
+      label: cur ? optionLabel(cur) : model.value || t("default"), labelledBy: "model-label", disabled: busy, grow: 1, minWidth: 0,
       menu: modelMenu(model, v => v !== model.value && setField(a, model, v)),
     })));
   }
   if (effort && (effort.options || []).length) {
     rows.push(FieldRow("effort", t("effort"), h("Select", {
       items: effort.options.map(o => ({ label: o.label || o.value, value: o.value })),
-      value: effort.value || "", disabled: busy, grow: 1, minWidth: 0,
+      value: effort.value || "", labelledBy: "effort-label", disabled: busy, grow: 1, minWidth: 0,
       onChange: v => v !== effort.value && setField(a, effort, v),
     })));
   }
@@ -442,7 +812,7 @@ function AgentBody(a) {
 }
 const FieldRow = (k, label, control) =>
   h("Row", { key: k, gap: 8, alignItems: "center", fillWidth: true },
-    TX(label, { fontSize: 11, textColor: "textMuted", width: 56, singleLine: true, shrink: 0 }), control);
+    TX(label, { key: k + "-label", fontSize: 11, textColor: "textMuted", width: 56, singleLine: true, shrink: 0 }), control);
 
 function AgentsSection() {
   const list = (state && state.agents) || [];
@@ -521,7 +891,7 @@ function AllowanceGroup(g) {
   return h("Column", { key: g.provider, gap: 6, fillWidth: true },
     h("Row", { gap: 8, alignItems: "center", padding: [2, 2, 0, 2] },
       Logo(g.icon, 14),
-      TX(lang === "zh" ? g.name : g.name.toUpperCase(), { fontSize: 10.5, fontWeight: 600, letterSpacing: 0.6, textColor: "textMuted", singleLine: true, shrink: 1, minWidth: 0 }),
+      TX(g.name, { fontSize: 10.5, fontWeight: 600, letterSpacing: 0.6, textColor: "textMuted", singleLine: true, shrink: 1, minWidth: 0 }),
       g.cards.length > 1 ? TX(String(g.cards.length), { fontSize: 9.5, fontWeight: 600, textColor: "textMuted", background: TRACK, radius: 8, padding: [0, 5] }) : null),
     g.cards.map((q, i) => QuotaCard(q, i, false)));
 }
@@ -568,7 +938,7 @@ function UsageSection() {
 // ---- shared pieces ----
 function SectionHead(title, count) {
   return h("Row", { gap: 6, alignItems: "center", padding: [4, 2, 0, 2] },
-    TX(lang === "zh" ? title : title.toUpperCase(), { fontSize: 10.5, fontWeight: 600, letterSpacing: 0.7, textColor: "textMuted" }),
+    TX(lang === "en" || lang === "de" ? title.toUpperCase() : title, { fontSize: 10.5, fontWeight: 600, letterSpacing: 0.7, textColor: "textMuted" }),
     count ? TX(String(count), { fontSize: 10.5, textColor: "textMuted", fontFeatures: "tnum", opacity: 0.7 }) : null);
 }
 const Empty = text => h("Row", { padding: [10, 12] }, TX(text, { fontSize: 12, textColor: "textMuted" }));
@@ -615,6 +985,41 @@ const root = body => h("Column", {
   shortcuts: { "CmdOrCtrl+R": () => refresh() },
 }, Header(), body);
 
+// Widgets are read-only snapshots: never put account names or credentials in them.
+function widgetSummary(family) {
+  const heading = h("Row", { gap: 6, alignItems: "center" },
+    h("Icon", { svg: BIRD, size: 14 }), TX("magpie", { fontSize: 13, fontWeight: 600 }), h("Spacer"));
+  const selected = trayCards();
+  const windows = selected.flatMap(q => windowsOf(q));
+  if (!windows.length) return h("Column", { gap: 8 }, heading, h("Spacer"),
+    TX(error ? t("Couldn't reach magpie") : quotas === null ? t("Loading allowances…") : t("No allowances yet"),
+      { fontSize: 12, color: "secondary", maxLines: 2 }), h("Spacer"));
+  const wideSmall = family === "small" && $metrix.platform === "windows";
+  const count = family === "small" && !wideSmall ? 1 : family === "large" ? 4 : 2;
+  const shown = windows.slice(0, count);
+  return h("Column", { gap: 8 }, heading, h("Spacer"),
+    h("Grid", { columns: shown.length, gap: 10 }, shown.map(w => {
+      const value = fill(w), used = to100(w.used);
+      const color = used >= 90 ? "warning" : "accent";
+      const ring = family === "large" ? 56 : 42;
+      const reset = w.resetsAt ? new Date(w.resetsAt) : null;
+      const label = shortWindow(w);
+      return h("Column", { gap: 4, alignItems: "center" },
+        h("Chart", { type: "pie", width: ring, height: ring, innerRadius: 0.7,
+          data: [{ value, color }, { value: 100 - value, color: "#8080803d" }] }),
+        TX(value + "% " + t(quotaLeft() ? "left" : "used"), { fontSize: 12, fontWeight: 600, maxLines: 1 }),
+        /^(?:\d+(?:\.\d+)?(?:m|h|d|w|mo)|hour|day|week|month|minute|daily|weekly|monthly)$/i.test(label) ? TX(label, { fontSize: 11, color: "secondary", maxLines: 1 }) : null,
+        reset && Number.isFinite(reset.getTime()) ? TX(t("Resets {when}", { when: widgetDate(reset) }), { fontSize: 10, color: "secondary", maxLines: 1 }) : null);
+    })), h("Spacer"));
+}
+function widgetDate(at) {
+  const date = lang === "zh" || lang === "zh-TW" || lang === "ja" ? (at.getMonth() + 1) + "月" + at.getDate() + "日"
+    : lang === "ko" ? (at.getMonth() + 1) + "월 " + at.getDate() + "일"
+    : lang === "de" ? at.getDate() + "." + (at.getMonth() + 1) + "."
+    : MONTH[at.getMonth()] + " " + at.getDate();
+  return date + " " + hhmm(at);
+}
+
 // ---- the menu bar, as magpie's own reads: "14% · 0%" per card ----
 function trayCards() {
   const all = quotas || [];
@@ -657,7 +1062,7 @@ export default {
   },
   render(env) {
     readInputs(env);
-    return { tray: trayTree(), panel: panelTree() };
+    return { tray: trayTree(), panel: panelTree(), widget: { small: widgetSummary("small"), medium: widgetSummary("medium"), large: widgetSummary("large") } };
   },
   async event(name, payload) {
     if (name === "lifecycle" && payload && payload.type === "collapse" && revealed.size) { revealed.clear(); $metrix.invalidate(); }

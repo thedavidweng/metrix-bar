@@ -8,7 +8,7 @@ My dashboards for [Metrix.Bar](https://metrix.bar/), the menu bar and system tra
 
 | Dashboard         | Use it to                                                                                               | File                                     |
 | ----------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| [Magpie](magpie/) | Control a [magpie](https://github.com/yetone/magpie) running elsewhere: agents, models, and allowances. | [`magpie/magpie.bar`](magpie/magpie.bar) |
+| [Magpie](magpie/) | Control [magpie](https://github.com/yetone/magpie) on this computer or elsewhere: agents, models, and allowances. | [`magpie/magpie.bar`](magpie/magpie.bar) |
 
 ## Install
 
@@ -34,7 +34,7 @@ You can also import a `.bar` file directly. A direct import does not receive upd
 
 ## Magpie
 
-Control a magpie running on another machine from your menu bar: switch agents' models, connect agents, and watch allowances. See [magpie/README.md](magpie/README.md) for screenshots, setup and settings.
+Control magpie on this computer or another machine from your menu bar: switch agents' models, connect agents, and watch allowances. See [magpie/README.md](magpie/README.md) for screenshots, setup and settings.
 
 ## Add or update a dashboard
 
@@ -45,7 +45,7 @@ curl -fsS https://metrix.bar/dashboards/build.js -o /tmp/build.js
 node /tmp/build.js --input . --output "$(mktemp -d)/out" --id thedavidweng --name "David Weng's Dashboards"
 ```
 
-Copy the generated `index.json` to the repository root. CI rebuilds it and fails when the committed one is out of date.
+Copy the generated `index.json` to the repository root. CI runs Magpie’s tests and checks that the committed index is current. To run the language, widget, and account-masking tests locally, use `node --test tests/magpie.test.mjs`.
 
 ## License
 

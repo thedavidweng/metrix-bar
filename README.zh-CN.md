@@ -8,7 +8,7 @@
 
 | 看板              | 用途                                                                             | 文件                                     |
 | ----------------- | -------------------------------------------------------------------------------- | ---------------------------------------- |
-| [Magpie](magpie/) | 控制部署在别处的 [magpie](https://github.com/yetone/magpie)：Agent、模型和额度。 | [`magpie/magpie.bar`](magpie/magpie.bar) |
+| [Magpie](magpie/) | 控制本机或别处的 [magpie](https://github.com/yetone/magpie)：Agent、模型和额度。 | [`magpie/magpie.bar`](magpie/magpie.bar) |
 
 ## 安装
 
@@ -34,7 +34,7 @@ metrixbar://install/magpie?registry_url=https%3A%2F%2Fraw.githubusercontent.com%
 
 ## Magpie
 
-在菜单栏里控制部署在另一台机器上的 magpie：切换 Agent 的模型、接入 Agent、查看额度。截图、配置和设置项见 [magpie/README.zh-CN.md](magpie/README.zh-CN.md)。
+在菜单栏里控制本机或另一台机器上的 magpie：切换 Agent 的模型、接入 Agent、查看额度。截图、配置和设置项见 [magpie/README.zh-CN.md](magpie/README.zh-CN.md)。
 
 ## 新增或更新看板
 
@@ -45,7 +45,7 @@ curl -fsS https://metrix.bar/dashboards/build.js -o /tmp/build.js
 node /tmp/build.js --input . --output "$(mktemp -d)/out" --id thedavidweng --name "David Weng's Dashboards"
 ```
 
-把生成的 `index.json` 复制到仓库根目录。CI 会重新生成它，已提交的版本过期时会失败。
+把生成的 `index.json` 复制到仓库根目录。CI 会运行 Magpie 的测试并检查已提交的索引是否过期。运行 `node --test tests/magpie.test.mjs`，可以在本地检查语言、小组件和账号打码行为。
 
 ## 许可证
 
