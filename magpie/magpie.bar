@@ -2,7 +2,7 @@
      widget="true"
      min-app-version="0.2.0"
      category="ai"
-     version="1.2.0"
+     version="1.2.1"
      description="Control magpie on this computer or a server from the menu bar: switch agents' models, connect agents, and watch allowances."
      license="AGPL-3.0-only"
      homepage="https://github.com/yetone/magpie"
@@ -19,50 +19,51 @@
   </permissions>
 
   <inputs>
-    <input name="source" type="select" label="Connect To" default="local">
-      <locale lang="zh-Hans" label="连接到" />
-      <locale lang="zh-Hant" label="連線到" />
-      <locale lang="ja" label="接続先" />
-      <locale lang="ko" label="연결 대상" />
-      <locale lang="de" label="Verbinden mit" />
-      <option value="local" label="magpie on this computer" >
-        <locale lang="zh-Hans" label="本机上的 magpie" />
-        <locale lang="zh-Hant" label="本機上的 magpie" />
-        <locale lang="ja" label="このコンピュータの magpie" />
-        <locale lang="ko" label="이 컴퓨터의 magpie" />
-        <locale lang="de" label="magpie auf diesem Computer" />
+    <input name="source" type="select" label="Connect To" default="local"
+           help="Use This computer for local magpie, or Remote URL for another machine.">
+      <locale lang="zh-Hans" label="连接方式" help="本机 magpie 选「本机」，其他设备选「远程地址」。" />
+      <locale lang="zh-Hant" label="連線方式" help="本機 magpie 選「本機」，其他裝置選「遠端網址」。" />
+      <locale lang="ja" label="接続先" help="ローカルの magpie は「このコンピュータ」、別端末は「リモート URL」を選択。" />
+      <locale lang="ko" label="연결 방식" help="로컬 magpie는 「이 컴퓨터」, 다른 기기는 「원격 URL」을 선택하세요." />
+      <locale lang="de" label="Verbinden mit" help="„Dieser Computer“ für lokales magpie, „Entfernte URL“ für ein anderes Gerät." />
+      <option value="local" label="This computer">
+        <locale lang="zh-Hans" label="本机" />
+        <locale lang="zh-Hant" label="本機" />
+        <locale lang="ja" label="このコンピュータ" />
+        <locale lang="ko" label="이 컴퓨터" />
+        <locale lang="de" label="Dieser Computer" />
       </option>
-      <option value="remote" label="magpie elsewhere, by Magpie URL" >
-        <locale lang="zh-Hans" label="通过地址连接其他设备上的 magpie" />
-        <locale lang="zh-Hant" label="透過網址連線至其他裝置上的 magpie" />
-        <locale lang="ja" label="URL で別のコンピュータの magpie に接続" />
-        <locale lang="ko" label="URL로 다른 기기의 magpie에 연결" />
-        <locale lang="de" label="magpie auf einem anderen Gerät per URL" />
+      <option value="remote" label="Remote URL">
+        <locale lang="zh-Hans" label="远程地址" />
+        <locale lang="zh-Hant" label="遠端網址" />
+        <locale lang="ja" label="リモート URL" />
+        <locale lang="ko" label="원격 URL" />
+        <locale lang="de" label="Entfernte URL" />
       </option>
     </input>
     <input name="localPort" type="string" label="Local Port" default="3430"
-           help="This computer only. The port of magpie's Browser access (Settings › Network and sharing), 3430 unless changed there. Not the gateway's 3425." >
-      <locale lang="zh-Hans" label="本机端口" help="仅本机。填写 magpie 的「设置 › 网络与共享 › 浏览器访问」端口，默认为 3430，不是网关的 3425。" />
-      <locale lang="zh-Hant" label="本機連接埠" help="僅限本機。填入 magpie「設定 › 網路與分享 › 瀏覽器存取」的連接埠，預設為 3430，不是閘道的 3425。" />
-      <locale lang="ja" label="ローカルポート" help="このコンピュータのみ。magpie の「設定 › ネットワークと共有 › ブラウザアクセス」のポートです。既定は 3430 で、ゲートウェイの 3425 ではありません。" />
-      <locale lang="ko" label="로컬 포트" help="이 컴퓨터에서만 사용합니다. magpie의 설정 › 네트워크 및 공유 › 브라우저 액세스 포트입니다. 기본값은 3430이며 게이트웨이의 3425가 아닙니다." />
-      <locale lang="de" label="Lokaler Port" help="Nur dieser Computer. Port des Browserzugriffs in magpie unter Einstellungen › Netzwerk und Freigabe; standardmäßig 3430, nicht der Gateway-Port 3425." />
+           help="Local only. Browser access port in magpie (default 3430, not gateway 3425).">
+      <locale lang="zh-Hans" label="本机端口" help="仅本机模式。magpie「浏览器访问」端口（默认 3430，非网关 3425）。" />
+      <locale lang="zh-Hant" label="本機連接埠" help="僅本機模式。magpie「瀏覽器存取」連接埠（預設 3430，非閘道 3425）。" />
+      <locale lang="ja" label="ローカルポート" help="ローカルのみ。magpie の「ブラウザアクセス」ポート（既定 3430、ゲートウェイ 3425 ではない）。" />
+      <locale lang="ko" label="로컬 포트" help="로컬 전용. magpie 「브라우저 액세스」 포트(기본 3430, 게이트웨이 3425 아님)." />
+      <locale lang="de" label="Lokaler Port" help="Nur lokal. Browserzugriff-Port in magpie (Standard 3430, nicht Gateway 3425)." />
     </input>
-    <input name="host" type="string" label="Magpie URL" placeholder="http://192.168.1.20:3430"
-           help="Elsewhere only. The magpie web address: scheme, host and port only, without the path or `?k=`." >
-      <locale lang="zh-Hans" label="Magpie 地址" help="仅远程连接。只填写 magpie 网页地址的协议、主机和端口，不要填写路径或 `?k=`。" />
-      <locale lang="zh-Hant" label="Magpie 網址" help="僅限遠端連線。只填入 magpie 網頁網址的通訊協定、主機和連接埠，不要填路徑或 `?k=`。" />
-      <locale lang="ja" label="Magpie URL" help="リモート接続のみ。magpie の Web アドレスのスキーム、ホスト、ポートのみを入力し、パスや `?k=` は含めないでください。" />
-      <locale lang="ko" label="Magpie URL" help="원격 연결에만 사용합니다. magpie 웹 주소의 스킴, 호스트, 포트만 입력하고 경로나 `?k=`는 제외하세요." />
-      <locale lang="de" label="Magpie-URL" help="Nur für entfernte Verbindungen. Nur Schema, Host und Port der magpie-Webadresse eingeben, ohne Pfad oder `?k=`." />
+    <input name="host" type="string" label="Remote URL" placeholder="http://192.168.1.20:3430"
+           help="Remote only. Base URL without path or ?k= (e.g. http://192.168.1.20:3430).">
+      <locale lang="zh-Hans" label="远程地址" help="仅远程模式。填到端口为止，不要带路径或 ?k=（如 http://192.168.1.20:3430）。" />
+      <locale lang="zh-Hant" label="遠端網址" help="僅遠端模式。填到連接埠為止，勿含路徑或 ?k=（如 http://192.168.1.20:3430）。" />
+      <locale lang="ja" label="リモート URL" help="リモートのみ。パスや ?k= を除いた URL（例: http://192.168.1.20:3430）。" />
+      <locale lang="ko" label="원격 URL" help="원격 전용. 경로나 ?k= 없이 포트까지만 입력(예: http://192.168.1.20:3430)." />
+      <locale lang="de" label="Entfernte URL" help="Nur entfernt. Basis-URL ohne Pfad oder ?k= (z. B. http://192.168.1.20:3430)." />
     </input>
     <input name="webKey" type="secret" label="Web Key"
-           help="Elsewhere only. The value after `?k=` in the link magpie prints. It grants full control of that magpie, so keep it private." >
-      <locale lang="zh-Hans" label="网页密钥" help="仅远程连接。magpie 打印的链接中 `?k=` 后面的值。它可以完全控制 magpie，请妥善保管。" />
-      <locale lang="zh-Hant" label="網頁金鑰" help="僅限遠端連線。magpie 印出的連結中 `?k=` 後的值。它可完全控制 magpie，請妥善保管。" />
-      <locale lang="ja" label="Web キー" help="リモート接続のみ。magpie が表示するリンクの `?k=` 以降の値です。magpie を完全に操作できるため、安全に保管してください。" />
-      <locale lang="ko" label="웹 키" help="원격 연결에만 사용합니다. magpie가 표시한 링크에서 `?k=` 뒤의 값입니다. magpie를 완전히 제어할 수 있으므로 안전하게 보관하세요." />
-      <locale lang="de" label="Web-Schlüssel" help="Nur für entfernte Verbindungen. Der Wert nach `?k=` im von magpie ausgegebenen Link gewährt vollständigen Zugriff und muss geheim bleiben." />
+           help="Remote only. The key after ?k= in magpie's web link.">
+      <locale lang="zh-Hans" label="访问密钥" help="仅远程模式。填 magpie 网页链接中 ?k= 后面的值。" />
+      <locale lang="zh-Hant" label="存取金鑰" help="僅遠端模式。填 magpie 網頁連結中 ?k= 後面的值。" />
+      <locale lang="ja" label="Web キー" help="リモートのみ。magpie のリンクにある ?k= 以降の値。" />
+      <locale lang="ko" label="웹 키" help="원격 전용. magpie 링크의 ?k= 뒤 값." />
+      <locale lang="de" label="Web-Schlüssel" help="Nur entfernt. Der Wert nach ?k= im magpie-Link." />
     </input>
     <input name="lang" type="select" label="Language" default="auto">
       <locale lang="zh-Hans" label="语言" />
@@ -70,7 +71,7 @@
       <locale lang="ja" label="言語" />
       <locale lang="ko" label="언어" />
       <locale lang="de" label="Sprache" />
-      <option value="auto" label="Same as magpie" >
+      <option value="auto" label="Same as magpie">
         <locale lang="zh-Hans" label="跟随 magpie" />
         <locale lang="zh-Hant" label="跟隨 magpie" />
         <locale lang="ja" label="magpie に合わせる" />
@@ -85,27 +86,27 @@
       <option value="de" label="Deutsch" />
     </input>
     <input name="hideAccounts" type="select" label="Hide Accounts" default="auto"
-           help="Blur email addresses and account names, as magpie's Hide accounts does. Same as magpie follows magpie's Privacy setting.">
-      <locale lang="zh-Hans" label="隐藏账号" help="模糊电子邮箱和账号名。「跟随 magpie」使用 magpie 的隐私设置。" />
-      <locale lang="zh-Hant" label="隱藏帳號" help="模糊電子郵件和帳號名稱。「跟隨 magpie」使用 magpie 的隱私設定。" />
-      <locale lang="ja" label="アカウントを隠す" help="メールアドレスとアカウント名をぼかします。「magpie に合わせる」は magpie のプライバシー設定に従います。" />
-      <locale lang="ko" label="계정 숨기기" help="이메일 주소와 계정 이름을 흐리게 표시합니다. 「magpie와 동일」은 magpie의 개인정보 설정을 따릅니다." />
-      <locale lang="de" label="Konten verbergen" help="E-Mail-Adressen und Kontonamen unkenntlich machen. „Wie magpie“ folgt der Datenschutzeinstellung von magpie." />
-      <option value="auto" label="Same as magpie" >
+           help="Blur emails and account names.">
+      <locale lang="zh-Hans" label="隐藏账号" help="打码邮箱和账号名。" />
+      <locale lang="zh-Hant" label="隱藏帳號" help="模糊電子郵件與帳號名稱。" />
+      <locale lang="ja" label="アカウントを隠す" help="メールアドレスとアカウント名をぼかします。" />
+      <locale lang="ko" label="계정 숨기기" help="이메일과 계정 이름을 흐리게 표시합니다." />
+      <locale lang="de" label="Konten verbergen" help="E-Mail-Adressen und Kontonamen unkenntlich machen." />
+      <option value="auto" label="Same as magpie">
         <locale lang="zh-Hans" label="跟随 magpie" />
         <locale lang="zh-Hant" label="跟隨 magpie" />
         <locale lang="ja" label="magpie に合わせる" />
         <locale lang="ko" label="magpie와 동일" />
         <locale lang="de" label="Wie magpie" />
       </option>
-      <option value="on" label="On" >
+      <option value="on" label="On">
         <locale lang="zh-Hans" label="开启" />
         <locale lang="zh-Hant" label="開啟" />
         <locale lang="ja" label="オン" />
         <locale lang="ko" label="켜기" />
         <locale lang="de" label="Ein" />
       </option>
-      <option value="off" label="Off" >
+      <option value="off" label="Off">
         <locale lang="zh-Hans" label="关闭" />
         <locale lang="zh-Hant" label="關閉" />
         <locale lang="ja" label="オフ" />
@@ -113,21 +114,21 @@
         <locale lang="de" label="Aus" />
       </option>
     </input>
-    <input name="showAgents" type="bool" label="Show Agents" default="true" >
+    <input name="showAgents" type="bool" label="Show Agents" default="true">
       <locale lang="zh-Hans" label="显示 Agent" />
       <locale lang="zh-Hant" label="顯示 Agent" />
       <locale lang="ja" label="エージェントを表示" />
       <locale lang="ko" label="에이전트 표시" />
       <locale lang="de" label="Agenten anzeigen" />
     </input>
-    <input name="showAllowances" type="bool" label="Show Allowances" default="true" >
+    <input name="showAllowances" type="bool" label="Show Allowances" default="true">
       <locale lang="zh-Hans" label="显示额度" />
       <locale lang="zh-Hant" label="顯示額度" />
       <locale lang="ja" label="利用枠を表示" />
       <locale lang="ko" label="사용 한도 표시" />
       <locale lang="de" label="Kontingente anzeigen" />
     </input>
-    <input name="showUsage" type="bool" label="Show Today's Usage" default="false" >
+    <input name="showUsage" type="bool" label="Show Today's Usage" default="false">
       <locale lang="zh-Hans" label="显示今日用量" />
       <locale lang="zh-Hant" label="顯示今日用量" />
       <locale lang="ja" label="今日の使用量を表示" />
@@ -140,14 +141,14 @@
       <locale lang="ja" label="メニューバーの表示" />
       <locale lang="ko" label="메뉴 막대 표시" />
       <locale lang="de" label="Menüleistenanzeige" />
-      <option value="allowance" label="Allowance, as magpie's menu bar does" >
-        <locale lang="zh-Hans" label="额度，与 magpie 菜单栏一致" />
-        <locale lang="zh-Hant" label="額度，與 magpie 選單列一致" />
-        <locale lang="ja" label="magpie のメニューバーと同じ利用枠" />
-        <locale lang="ko" label="magpie 메뉴 막대와 같은 사용 한도" />
-        <locale lang="de" label="Kontingent wie in der magpie-Menüleiste" />
+      <option value="allowance" label="Allowance">
+        <locale lang="zh-Hans" label="额度" />
+        <locale lang="zh-Hant" label="額度" />
+        <locale lang="ja" label="利用枠" />
+        <locale lang="ko" label="사용 한도" />
+        <locale lang="de" label="Kontingent" />
       </option>
-      <option value="icon" label="Icon only" >
+      <option value="icon" label="Icon only">
         <locale lang="zh-Hans" label="仅图标" />
         <locale lang="zh-Hant" label="僅圖示" />
         <locale lang="ja" label="アイコンのみ" />
@@ -157,15 +158,49 @@
     </input>
   </inputs>
 
-  <docs><![CDATA[Connects to the magpie app on this computer, or to a magpie you run elsewhere, such as on a server.
+  <docs><![CDATA[This computer (default):
+1. In magpie, set Settings › Network and sharing › Browser access to This computer.
+2. Leave Connect To as This computer and Local Port at 3430 (unless changed in magpie).
 
-This computer (the default): in magpie, set Settings › Network and sharing › Browser access to This computer. The dashboard reads the page's port and key from ~/.config/magpie/web-page.json, so there is nothing to copy, and a new key in magpie is picked up on the next refresh. If you changed the page's port there, put the same port into Local Port.
+Remote / server:
+1. Set Connect To to Remote URL.
+2. Open magpie's web link (http://HOST:PORT/?k=KEY).
+3. Enter http://HOST:PORT in Remote URL and KEY in Web Key.]]><locale lang="zh-Hans"><![CDATA[本机模式（默认）：
+1. 在 magpie 中打开「设置 › 网络与共享 › 浏览器访问」，设为「本机」。
+2. 保持连接方式为「本机」、本机端口为 3430（如在 magpie 中改过端口请同步修改）。
 
-Elsewhere: set Connect To to magpie elsewhere.
-1. Open magpie's web page from the link it prints (magpie web, or Browser access in the app). The link looks like http://HOST:PORT/?k=KEY.
-2. Put http://HOST:PORT into Magpie URL and KEY into Web Key.
+远程 / 服务器模式：
+1. 将连接方式设为「远程地址」。
+2. 打开 magpie 的网页链接（格式为 http://HOST:PORT/?k=KEY）。
+3. 将 http://HOST:PORT 填入「远程地址」，将 KEY 填入「访问密钥」。]]></locale><locale lang="zh-Hant"><![CDATA[本機模式（預設）：
+1. 在 magpie 中開啟「設定 › 網路與分享 › 瀏覽器存取」，設為「本機」。
+2. 保持連線方式為「本機」、本機連接埠為 3430（若在 magpie 中改過請同步修改）。
 
-The key grants full control of that magpie, so keep it private. Plain HTTP is allowed for Magpie URL only, since magpie web usually runs on a home network or tailnet without HTTPS. Which sections the panel shows, its language and the menu bar text are in these settings too.]]></docs>
+遠端 / 伺服器模式：
+1. 將連線方式設為「遠端網址」。
+2. 開啟 magpie 的網頁連結（格式為 http://HOST:PORT/?k=KEY）。
+3. 將 http://HOST:PORT 填入「遠端網址」，將 KEY 填入「存取金鑰」。]]></locale><locale lang="ja"><![CDATA[ローカル接続（既定）：
+1. magpie の「設定 › ネットワークと共有 › ブラウザアクセス」を「このコンピュータ」に設定します。
+2. 接続先は「このコンピュータ」、ローカルポートは 3430 のままにします（magpie 側で変更した場合は同じ値）。
+
+リモート / サーバー接続：
+1. 接続先を「リモート URL」に変更します。
+2. magpie の Web リンク（http://HOST:PORT/?k=KEY）を確認します。
+3. 「リモート URL」に http://HOST:PORT、「Web キー」に KEY を入力します。]]></locale><locale lang="ko"><![CDATA[로컬 연결(기본값):
+1. magpie의 「설정 › 네트워크 및 공유 › 브라우저 액세스」를 「이 컴퓨터」로 설정하세요.
+2. 연결 방식은 「이 컴퓨터」, 로컬 포트는 3430으로 둡니다(magpie에서 변경한 경우 동일하게 입력).
+
+원격 / 서버 연결:
+1. 연결 방식을 「원격 URL」로 변경하세요.
+2. magpie 웹 링크(http://HOST:PORT/?k=KEY)를 확인하세요.
+3. 「원격 URL」에 http://HOST:PORT, 「웹 키」에 KEY를 입력하세요.]]></locale><locale lang="de"><![CDATA[Dieser Computer (Standard):
+1. In magpie unter „Einstellungen › Netzwerk und Freigabe › Browserzugriff“ „Dieser Computer“ wählen.
+2. „Verbinden mit“ auf „Dieser Computer“ und „Lokaler Port“ auf 3430 belassen (falls geändert, anpassen).
+
+Entfernt / Server:
+1. „Verbinden mit“ auf „Entfernte URL“ stellen.
+2. Web-Link von magpie öffnen (http://HOST:PORT/?k=KEY).
+3. http://HOST:PORT bei „Entfernte URL“ und KEY bei „Web-Schlüssel“ eingeben.]]></locale></docs>
 
   <script apis="shell"><![CDATA[
 const h = (type, props, ...children) =>
