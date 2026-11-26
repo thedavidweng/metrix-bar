@@ -1211,8 +1211,10 @@ function notchTree() {
   }
   return {
     compact: {
-      leading: h("Icon", { svg: BIRD, width: 14, height: 14, fontSize: 14, textColor: "text" }),
-      trailing: TX(badge, { fontSize: 12, fontWeight: 600, fontFeatures: "tnum" }),
+      leading: h("Row", { padding: [0, 4, 0, 8], alignItems: "center" },
+        h("Icon", { svg: BIRD, width: 14, height: 14, fontSize: 14, textColor: "text" })),
+      trailing: h("Row", { padding: [0, 8, 0, 4], alignItems: "center" },
+        TX(badge, { fontSize: 11.5, fontWeight: 600, fontFeatures: "tnum" })),
     },
     minimal: h("Icon", { svg: BIRD, width: 14, height: 14, fontSize: 14, textColor: "text" }),
     expanded: h("Column", { gap: 8, padding: [4, 6], fillWidth: true }, body.length ? body : Empty(t("No allowances yet"))),
