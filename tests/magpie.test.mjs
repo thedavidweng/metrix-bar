@@ -138,7 +138,7 @@ test('allowances follow magpie usageOrder and support context-menu reordering', 
   vm.runInContext(script, context);
   const env = { inputs: { ...inputs, lang: 'en' } };
   await context.dashboard.scheduled(env);
-  const ordered = vm.runInContext('orderedQuotasList(quotas).map(q => q.provider)', context);
+  const ordered = Array.from(vm.runInContext('orderedQuotasList(quotas).map(q => q.provider)', context));
   assert.deepEqual(ordered, ['codex', 'openrouter']);
   const view = context.dashboard.render(env);
   const serialized = JSON.stringify(view.panel);
