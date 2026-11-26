@@ -79,8 +79,41 @@ test('widget trees use the portable read-only component subset', async () => {
       if (typeof node === 'string') return;
       assert.ok(Object.hasOwn(allowed, node.type), node.type);
       for (const prop of Object.keys(node.props)) assert.ok(allowed[node.type].includes(prop), `${node.type}.${prop}`);
-      for (const child of node.children) check(child);
+    for (const child of node.children) check(child);
     };
     Object.values(widget).forEach(check);
   }
+});
+
+test('tray menu includes wired agent model submenus and respects outputs/notch', async () => {
+  const wiredAgents = [{
+    id: 'codex', name: 'Codex', wired: true,
+    fields: [{ key: 'model', value: 'gpt-5', options: [{ value: 'gpt-5', label: 'GPT-5' }, { value: 'o3', label: 'o3' }] }],
+  }];
+  const state = { settings: { lang: 'en', quotaLeft: false, trayUsages: ['provider|person@example.test'] }, agents: wiredAgents };
+  const quotas = [{ provider: 'provider', name: 'Provider', user: 'person@example.test', windows: [
+    { name: '5 hour', used: 40, resetsAt: new Date(Date.now() + 120000).toISOString() },
+  ] }];
+  const schedules = [];
+  const context = vm.createContext({
+    URL, navigator: { language: 'en-US' },
+    $metrix: {
+      platform: 'darwin',
+      secret: () => 'test-key',
+      invalidate() {},
+      caniuse: async cap => cap === 'render.notch',
+      outputs: () => ({ tray: true, panel: false, notch: 'compact', widget: { known: true, families: ['small'] } }),
+      schedule: ms => schedules.push(ms),
+    },
+    fetch: async url => ({ ok: true, status: 200, text: async () => JSON.stringify(url.endsWith('/state') ? state : quotas) }),
+  });
+  vm.runInContext(script, context);
+  const env = { inputs: { ...inputs, lang: 'en' } };
+  await context.dashboard.scheduled(env);
+  const view = context.dashboard.render(env);
+  assert.ok(view.tray.menu.some(item => item.label && item.label.startsWith('Codex') && Array.isArray(item.items) && item.items.length === 2));
+  assert.equal(view.panel, undefined);
+  assert.deepEqual(Object.keys(view.widget), ['small']);
+  assert.ok(view.notch && view.notch.compact && view.notch.expanded);
+  assert.equal(schedules.at(-1), 30000);
 });
