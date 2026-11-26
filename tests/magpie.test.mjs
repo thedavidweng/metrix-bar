@@ -186,3 +186,35 @@ test('supports agents-only, usage-only, agentFilter, and notchSections modes', a
   assert.doesNotMatch(agentsPanel, /Claude/);
   assert.match(JSON.stringify(agentsView.notch.expanded), /Codex/);
 });
+
+test('supports hiding individual quota cards, windows, and agents', async () => {
+  const store = new Map();
+  const state = { settings: { lang: 'en' }, agents: [{ id: 'codex', name: 'Codex', wired: true, fields: [] }] };
+  const quotas = [
+    { provider: 'factory', name: 'Factory', user: 'a@b.test', windows: [{ name: '5 hour', used: 10 }, { name: '7 day', used: 20 }] },
+    { provider: 'codex', name: 'Codex', user: 'c@d.test', windows: [{ name: '5 hour', used: 30 }] },
+  ];
+  const context = vm.createContext({
+    URL, navigator: { language: 'en-US' },
+    localStorage: {
+      getItem: k => store.get(k) ?? null,
+      setItem: (k, v) => store.set(k, String(v)),
+      removeItem: k => store.delete(k),
+    },
+    $metrix: { platform: 'darwin', secret: () => 'test-key', invalidate() {} },
+    fetch: async url => ({ ok: true, status: 200, text: async () => JSON.stringify(url.includes('/usage/quotas') ? quotas : state) }),
+  });
+  vm.runInContext(script, context);
+  const env = { inputs: { ...inputs, lang: 'en' } };
+  await context.dashboard.scheduled(env);
+  vm.runInContext('toggleSetItem("magpie:hiddenCards", hiddenCards, "codex|c@d.test")', context);
+  vm.runInContext('toggleSetItem("magpie:hiddenWindows", hiddenWindows, "factory|a@b.test||5 hour")', context);
+  vm.runInContext('toggleSetItem("magpie:hiddenAgents", hiddenAgents, "codex")', context);
+  const view = context.dashboard.render(env);
+  const panelJson = JSON.stringify(view.panel);
+  assert.match(panelJson, /Hide from overview/);
+  assert.match(panelJson, /Show 5 hour/);
+  assert.match(panelJson, /2 hidden/);
+  assert.match(panelJson, /1 hidden/);
+  assert.doesNotMatch(panelJson, /c@d\.test/);
+});

@@ -367,7 +367,14 @@ const WORDS = {
     "Move up": "上移",
     "Move down": "下移",
     "Reset order": "恢复默认排序",
-    "Enable a section in dashboard settings.": "请在看板设置中至少开启一个显示区块。"
+    "Enable a section in dashboard settings.": "请在看板设置中至少开启一个显示区块。",
+    "Hide from overview": "从概览中隐藏",
+    "Show in overview": "恢复到概览",
+    "Hide {name}": "从概览中隐藏 {name}",
+    "Show {name}": "恢复显示 {name}",
+    "{n} hidden": "已隐藏 {n} 项",
+    "Restore all": "全部恢复",
+    "All windows hidden": "所有额度窗口已隐藏"
   },
   "zh-TW": {
     "Loading allowances…": "正在載入額度…",
@@ -429,7 +436,14 @@ const WORDS = {
     "Move up": "上移",
     "Move down": "下移",
     "Reset order": "恢復預設排序",
-    "Enable a section in dashboard settings.": "請在看板設定中至少開啟一個顯示區塊。"
+    "Enable a section in dashboard settings.": "請在看板設定中至少開啟一個顯示區塊。",
+    "Hide from overview": "從概覽中隱藏",
+    "Show in overview": "恢復到概覽",
+    "Hide {name}": "從概覽中隱藏 {name}",
+    "Show {name}": "恢復顯示 {name}",
+    "{n} hidden": "已隱藏 {n} 項",
+    "Restore all": "全部恢復",
+    "All windows hidden": "所有額度視窗已隱藏"
   },
   "ja": {
     "Loading allowances…": "利用枠を読み込み中…",
@@ -491,7 +505,14 @@ const WORDS = {
     "Move up": "上へ移動",
     "Move down": "下へ移動",
     "Reset order": "並び順をリセット",
-    "Enable a section in dashboard settings.": "ダッシュボード設定で表示項目を 1 つ以上有効にしてください。"
+    "Enable a section in dashboard settings.": "ダッシュボード設定で表示項目を 1 つ以上有効にしてください。",
+    "Hide from overview": "概要から非表示",
+    "Show in overview": "概要に表示",
+    "Hide {name}": "{name} を非表示",
+    "Show {name}": "{name} を表示",
+    "{n} hidden": "{n} 件を非表示",
+    "Restore all": "すべて表示",
+    "All windows hidden": "すべての利用枠を非表示"
   },
   "ko": {
     "Loading allowances…": "사용 한도를 불러오는 중…",
@@ -553,7 +574,14 @@ const WORDS = {
     "Move up": "위로 이동",
     "Move down": "아래로 이동",
     "Reset order": "정렬 초기화",
-    "Enable a section in dashboard settings.": "대시보드 설정에서 표시할 항목을 하나 이상 켜세요."
+    "Enable a section in dashboard settings.": "대시보드 설정에서 표시할 항목을 하나 이상 켜세요.",
+    "Hide from overview": "개요에서 숨기기",
+    "Show in overview": "개요에 표시",
+    "Hide {name}": "{name} 숨기기",
+    "Show {name}": "{name} 표시",
+    "{n} hidden": "{n}개 숨겨짐",
+    "Restore all": "모두 복원",
+    "All windows hidden": "모든 사용 한도 창이 숨겨짐"
   },
   "de": {
     "Loading allowances…": "Kontingente werden geladen…",
@@ -615,7 +643,14 @@ const WORDS = {
     "Move up": "Nach oben",
     "Move down": "Nach unten",
     "Reset order": "Reihenfolge zurücksetzen",
-    "Enable a section in dashboard settings.": "Aktiviere mindestens einen Bereich in den Dashboard-Einstellungen."
+    "Enable a section in dashboard settings.": "Aktiviere mindestens einen Bereich in den Dashboard-Einstellungen.",
+    "Hide from overview": "Aus Übersicht ausblenden",
+    "Show in overview": "In Übersicht einblenden",
+    "Hide {name}": "{name} ausblenden",
+    "Show {name}": "{name} einblenden",
+    "{n} hidden": "{n} ausgeblendet",
+    "Restore all": "Alle wiederherstellen",
+    "All windows hidden": "Alle Kontingentfenster ausgeblendet"
   }
 };
 const WEEK = { en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], zh: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], "zh-TW": ["週日", "週一", "週二", "週三", "週四", "週五", "週六"], ja: ["日", "月", "火", "水", "木", "金", "土"], ko: ["일", "월", "화", "수", "목", "금", "토"], de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"] };
@@ -761,7 +796,30 @@ function saveOrder(storageKey, arr) {
   try { if (typeof localStorage !== "undefined") arr.length ? localStorage.setItem(storageKey, JSON.stringify(arr)) : localStorage.removeItem(storageKey); } catch (e) {}
 }
 let customQuotaOrder = loadOrder("magpie:quotaOrder"), customAgentOrder = loadOrder("magpie:agentOrder");
+let hiddenCards = new Set(loadOrder("magpie:hiddenCards"));
+let hiddenWindows = new Set(loadOrder("magpie:hiddenWindows"));
+let hiddenAgents = new Set(loadOrder("magpie:hiddenAgents"));
+let showHiddenAllowances = false, showHiddenAgents = false;
 const quotaId = q => q.user ? q.provider + "|" + q.user : q.provider;
+const windowId = (q, w) => quotaId(q) + "|" + (w.pool || "") + "|" + (w.name || "");
+const windowTitle = w => (w.pool ? String(w.pool) + " · " : "") + String(w.name || "");
+function toggleSetItem(storageKey, set, id) {
+  set.has(id) ? set.delete(id) : set.add(id);
+  saveOrder(storageKey, [...set]);
+  $metrix.invalidate();
+}
+function clearHiddenAllowances() {
+  hiddenCards.clear(); hiddenWindows.clear();
+  saveOrder("magpie:hiddenCards", []); saveOrder("magpie:hiddenWindows", []);
+  showHiddenAllowances = false;
+  $metrix.invalidate();
+}
+function clearHiddenAgents() {
+  hiddenAgents.clear();
+  saveOrder("magpie:hiddenAgents", []);
+  showHiddenAgents = false;
+  $metrix.invalidate();
+}
 function orderedAgentsList(list) {
   if (!customAgentOrder.length) return list;
   const pos = new Map(customAgentOrder.map((id, i) => [id, i]));
@@ -1046,6 +1104,9 @@ function AgentRow(a, orderIds) {
   const open = openAgent === a.id;
   const summary = model ? (opt ? opt.label : model.value) || t("default") : "";
   const ctx = orderIds ? orderMenuItems("magpie:agentOrder", orderIds, a.id, customAgentOrder.length > 0, v => { customAgentOrder = v; }, () => { customAgentOrder = []; }) : [];
+  const isHidden = hiddenAgents.has(a.id);
+  if (ctx.length) ctx.push({ separator: true });
+  ctx.push({ label: t(isHidden ? "Show in overview" : "Hide from overview"), onClick: () => toggleSetItem("magpie:hiddenAgents", hiddenAgents, a.id) });
   const head = h("Row", {
     key: "head:" + a.id, height: 36, gap: 10, padding: [0, 12], alignItems: "center", fillWidth: true, radius: 9, cursor: "pointer",
     background: open ? "surfaceHover" : "#00000000", hover: { background: "surfaceHover" }, pressed: { background: "surfacePressed" },
@@ -1100,7 +1161,9 @@ function filteredAgents(list) {
   return list;
 }
 function AgentsSection() {
-  const list = filteredAgents(orderedAgentsList((state && state.agents) || []));
+  const allFiltered = filteredAgents(orderedAgentsList((state && state.agents) || []));
+  const list = allFiltered.filter(a => !hiddenAgents.has(a.id));
+  const hiddenList = allFiltered.filter(a => hiddenAgents.has(a.id));
   const orderIds = list.map(a => a.id);
   const wired = list.filter(a => a.wired), rest = list.filter(a => !a.wired);
   const fold = list.length > 6 && rest.length > 1 && !showAllAgents;
@@ -1112,12 +1175,21 @@ function AgentsSection() {
     hidden > 0 || showAllAgents && list.length > 6 ? h("Row", {
       padding: [6, 12], radius: 8, cursor: "pointer", hover: { background: "surfaceHover" },
       onClick: () => { showAllAgents = !showAllAgents; $metrix.invalidate(); },
-    }, TX(hidden > 0 ? t("Show {n} more", { n: hidden }) : t("Show less"), { fontSize: 12, textColor: "textMuted" })) : null);
+    }, TX(hidden > 0 ? t("Show {n} more", { n: hidden }) : t("Show less"), { fontSize: 12, textColor: "textMuted" })) : null,
+    hiddenList.length ? h("Row", {
+      key: "hidden-agents", gap: 8, padding: [6, 12], radius: 8, alignItems: "center", cursor: "pointer", fillWidth: true,
+      hover: { background: "surfaceHover" }, onClick: () => { showHiddenAgents = !showHiddenAgents; $metrix.invalidate(); },
+    },
+      TX(t("{n} hidden", { n: hiddenList.length }), { fontSize: 11.5, textColor: "textMuted", grow: 1 }),
+      TX(t("Restore all"), { fontSize: 11.5, textColor: "accent", cursor: "pointer", onClick: clearHiddenAgents }),
+      Glyph("chev", 10, "textMuted", { transform: { rotate: showHiddenAgents ? 0 : -90 } })) : null,
+    hiddenList.length && showHiddenAgents ? h("Column", { key: "hidden-agent-list", gap: 1, fillWidth: true, opacity: 0.7 }, hiddenList.map(a => AgentRow(a, null))) : null);
 }
 
 // ---- allowances, as magpie's panel cards draw them ----
 // the windows that stop the account: not a single model's tier, nor on-demand spending
-const windowsOf = q => (q.windows || []).filter(w => !w.aside && !w.model && !w.trayExtra && !w.family && !w.unlimited && w.balance == null);
+const rawWindowsOf = q => (q.windows || []).filter(w => !w.aside && !w.model && !w.trayExtra && !w.family && !w.unlimited && w.balance == null);
+const windowsOf = q => rawWindowsOf(q).filter(w => !hiddenWindows.has(windowId(q, w)));
 const pooled = ws => new Set(ws.map(w => w.pool).filter(Boolean)).size > 1;
 function Ring(w, pools) {
   const used = to100(w.used), p = fill(w);
@@ -1147,12 +1219,13 @@ function resetSay(ws) {
 }
 function QuotaCard(q, i, logo, orderIds) {
   const who = q.alias || q.user || q.name;
-  const all = windowsOf(q), pools = pooled(all);
+  const rawAll = rawWindowsOf(q), all = rawAll.filter(w => !hiddenWindows.has(windowId(q, w))), pools = pooled(all);
   const ws = all.slice(0, pools ? 4 : 3);
   const unlimited = (q.windows || []).some(w => w.unlimited);
   let line, lineColor = "textMuted", right = null;
   if (q.error) { line = hideIn(q.error, q.provider); lineColor = "danger"; }
   else if (ws.length) { line = resetSay(ws); right = h("Row", { gap: ws.length > 3 ? 7 : 12, shrink: 0 }, ws.map(w => Ring(w, pools))); }
+  else if (rawAll.length && !all.length) line = t("All windows hidden");
   else if (unlimited) line = t("Unlimited");
   else line = "";
   if (!q.error && q.balance) {
@@ -1161,8 +1234,16 @@ function QuotaCard(q, i, logo, orderIds) {
   }
   const tip = hideIn([q.name, q.alias, q.user, q.plan, q.balance && t("Balance") + " " + q.balance].filter(Boolean).join(" · ") + (q.error ? "\n" + q.error : ""), q.provider);
   const orderMenu = orderIds ? orderMenuItems("magpie:quotaOrder", orderIds, quotaId(q), customQuotaOrder.length > 0, v => { customQuotaOrder = v; }, () => { customQuotaOrder = []; }) : [];
+  const cardHidden = hiddenCards.has(quotaId(q));
   const ctx = [{ label: t("Refresh this allowance"), onClick: () => refreshQuota(q) }];
   if (orderMenu.length) ctx.push({ separator: true }, ...orderMenu);
+  if (!q.error) {
+    ctx.push({ separator: true }, { label: t(cardHidden ? "Show in overview" : "Hide from overview"), onClick: () => toggleSetItem("magpie:hiddenCards", hiddenCards, quotaId(q)) });
+    for (const w of rawAll) {
+      const wid = windowId(q, w), isW = hiddenWindows.has(wid);
+      ctx.push({ label: t(isW ? "Show {name}" : "Hide {name}", { name: windowTitle(w) }), onClick: () => toggleSetItem("magpie:hiddenWindows", hiddenWindows, wid) });
+    }
+  }
   return h("Row", {
     key: q.provider + ":" + (q.user || "") + ":" + i, gap: 10, padding: [10, 12], radius: 11, background: "surfaceHover", alignItems: "center", fillWidth: true,
     tooltip: tip, contextMenu: ctx,
@@ -1195,13 +1276,24 @@ function grouped(cards) {
 }
 function AllowancesSection() {
   const all = quotas || [];
-  const ok = orderedQuotasList(all.filter(q => !q.error && (windowsOf(q).length || q.balance || (q.windows || []).some(w => w.unlimited))));
+  const allOk = orderedQuotasList(all.filter(q => !q.error && (rawWindowsOf(q).length || q.balance || (q.windows || []).some(w => w.unlimited))));
+  const ok = allOk.filter(q => !hiddenCards.has(quotaId(q)));
+  const hiddenList = allOk.filter(q => hiddenCards.has(quotaId(q)));
+  const hiddenCount = hiddenList.length + hiddenWindows.size;
   const orderIds = ok.map(quotaId);
   const bad = all.filter(q => q.error);
   return h("Column", { key: "allowances", gap: 6, fillWidth: true },
     SectionHead(t("Allowances")),
     quotas === null ? Skeleton(2) : !all.length ? Empty(t("No allowances yet")) :
       h("Column", { gap: 8, fillWidth: true }, grouped(ok).map(g => AllowanceGroup(g, orderIds))),
+    hiddenCount ? h("Row", {
+      key: "hidden-allowances", gap: 8, padding: [7, 12], radius: 9, alignItems: "center", cursor: "pointer", fillWidth: true,
+      hover: { background: "surfaceHover" }, onClick: () => { showHiddenAllowances = !showHiddenAllowances; $metrix.invalidate(); },
+    },
+      TX(t("{n} hidden", { n: hiddenCount }), { fontSize: 12, textColor: "textMuted", grow: 1 }),
+      TX(t("Restore all"), { fontSize: 11.5, textColor: "accent", cursor: "pointer", onClick: clearHiddenAllowances }),
+      Glyph("chev", 10, "textMuted", { transform: { rotate: showHiddenAllowances ? 0 : -90 } })) : null,
+    hiddenList.length && showHiddenAllowances ? h("Column", { key: "hidden-list", gap: 6, fillWidth: true, opacity: 0.7 }, hiddenList.map((q, i) => QuotaCard(q, i, true))) : null,
     bad.length ? h("Row", {
       key: "bad", gap: 8, padding: [7, 12], radius: 9, alignItems: "center", cursor: "pointer", fillWidth: true,
       hover: { background: "surfaceHover" }, onClick: () => { showBroken = !showBroken; $metrix.invalidate(); },
@@ -1313,7 +1405,7 @@ function widgetDate(at) {
 
 // ---- the menu bar, as magpie's own reads: "14% · 0%" per card ----
 function trayCards() {
-  const all = orderedQuotasList(quotas || []);
+  const all = orderedQuotasList((quotas || []).filter(q => !hiddenCards.has(quotaId(q))));
   const ids = (state && state.settings && state.settings.trayUsages) || [];
   const named = ids.map(id => all.find(q => quotaId(q) === id)).filter(Boolean);
   if (named.length) return named;
@@ -1372,12 +1464,12 @@ function notchTree() {
   const wantAgents = mode === "all" || mode === "agents" || (mode === "follow" && inputs.showAgents !== false);
   const wantUsage = mode === "all" || mode === "usage" || (mode === "follow" && inputs.showUsage === true);
   const maxCards = Math.max(1, Math.min(8, Number(inputs.notchCards) || 4));
-  const ordered = orderedQuotasList((quotas || []).filter(q => !q.error && !q.asOf && (windowsOf(q).length || q.balance)));
+  const ordered = orderedQuotasList((quotas || []).filter(q => !q.error && !q.asOf && !hiddenCards.has(quotaId(q)) && (windowsOf(q).length || q.balance)));
   const cards = trayCards();
   const shownCards = [...cards, ...ordered.filter(q => !cards.includes(q))].slice(0, maxCards);
   const orderIds = ordered.map(quotaId);
   const firstWindow = shownCards[0] && windowsOf(shownCards[0])[0];
-  const allAgents = filteredAgents(orderedAgentsList((state && state.agents) || []));
+  const allAgents = filteredAgents(orderedAgentsList((state && state.agents) || [])).filter(a => !hiddenAgents.has(a.id));
   const agentOrderIds = allAgents.map(a => a.id);
   const shownAgents = wantAllowances ? allAgents.filter(a => a.wired) : allAgents;
   const badge = error ? "!" : wantAllowances && firstWindow ? fill(firstWindow) + "%" : wantUsage && usage ? money(usage.cost) : wantAgents ? String(shownAgents.length) : "--";
