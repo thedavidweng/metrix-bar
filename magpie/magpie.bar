@@ -122,6 +122,34 @@
       <locale lang="ko" label="에이전트 표시" />
       <locale lang="de" label="Agenten anzeigen" />
     </input>
+    <input name="agentFilter" type="select" label="Agents Filter" default="all">
+      <locale lang="zh-Hans" label="Agent 筛选" />
+      <locale lang="zh-Hant" label="Agent 篩選" />
+      <locale lang="ja" label="エージェント絞り込み" />
+      <locale lang="ko" label="에이전트 필터" />
+      <locale lang="de" label="Agentenfilter" />
+      <option value="all" label="All">
+        <locale lang="zh-Hans" label="全部" />
+        <locale lang="zh-Hant" label="全部" />
+        <locale lang="ja" label="すべて" />
+        <locale lang="ko" label="전체" />
+        <locale lang="de" label="Alle" />
+      </option>
+      <option value="wired" label="Connected only">
+        <locale lang="zh-Hans" label="仅已接入" />
+        <locale lang="zh-Hant" label="僅已接入" />
+        <locale lang="ja" label="接続済みのみ" />
+        <locale lang="ko" label="연결됨만" />
+        <locale lang="de" label="Nur verbundene" />
+      </option>
+      <option value="installed" label="Installed only">
+        <locale lang="zh-Hans" label="仅已安装" />
+        <locale lang="zh-Hant" label="僅已安裝" />
+        <locale lang="ja" label="インストール済みのみ" />
+        <locale lang="ko" label="설치됨만" />
+        <locale lang="de" label="Nur installierte" />
+      </option>
+    </input>
     <input name="showAllowances" type="bool" label="Show Allowances" default="true">
       <locale lang="zh-Hans" label="显示额度" />
       <locale lang="zh-Hant" label="顯示額度" />
@@ -157,6 +185,13 @@
         <locale lang="ko" label="사용 한도" />
         <locale lang="de" label="Kontingent" />
       </option>
+      <option value="usage" label="Today's usage">
+        <locale lang="zh-Hans" label="今日用量" />
+        <locale lang="zh-Hant" label="今日用量" />
+        <locale lang="ja" label="今日の使用量" />
+        <locale lang="ko" label="오늘 사용량" />
+        <locale lang="de" label="Heutige Nutzung" />
+      </option>
       <option value="icon" label="Icon only">
         <locale lang="zh-Hans" label="仅图标" />
         <locale lang="zh-Hant" label="僅圖示" />
@@ -164,6 +199,58 @@
         <locale lang="ko" label="아이콘만" />
         <locale lang="de" label="Nur Symbol" />
       </option>
+    </input>
+    <input name="notchSections" type="select" label="Notch Shows" default="follow">
+      <locale lang="zh-Hans" label="刘海屏显示" />
+      <locale lang="zh-Hant" label="瀏海屏顯示" />
+      <locale lang="ja" label="ノッチ表示" />
+      <locale lang="ko" label="노치 표시" />
+      <locale lang="de" label="Notch-Anzeige" />
+      <option value="follow" label="Follow panel settings">
+        <locale lang="zh-Hans" label="跟随面板设置" />
+        <locale lang="zh-Hant" label="跟隨面板設定" />
+        <locale lang="ja" label="パネル設定に合わせる" />
+        <locale lang="ko" label="패널 설정 따르기" />
+        <locale lang="de" label="Wie Panel-Einstellungen" />
+      </option>
+      <option value="allowances" label="Allowances only">
+        <locale lang="zh-Hans" label="仅额度" />
+        <locale lang="zh-Hant" label="僅額度" />
+        <locale lang="ja" label="利用枠のみ" />
+        <locale lang="ko" label="사용 한도만" />
+        <locale lang="de" label="Nur Kontingente" />
+      </option>
+      <option value="agents" label="Agents only">
+        <locale lang="zh-Hans" label="仅 Agent" />
+        <locale lang="zh-Hant" label="僅 Agent" />
+        <locale lang="ja" label="エージェントのみ" />
+        <locale lang="ko" label="에이전트만" />
+        <locale lang="de" label="Nur Agenten" />
+      </option>
+      <option value="usage" label="Today's usage only">
+        <locale lang="zh-Hans" label="仅今日用量" />
+        <locale lang="zh-Hant" label="僅今日用量" />
+        <locale lang="ja" label="今日の使用量のみ" />
+        <locale lang="ko" label="오늘 사용량만" />
+        <locale lang="de" label="Nur heutige Nutzung" />
+      </option>
+      <option value="all" label="Everything">
+        <locale lang="zh-Hans" label="全部" />
+        <locale lang="zh-Hant" label="全部" />
+        <locale lang="ja" label="すべて" />
+        <locale lang="ko" label="전체" />
+        <locale lang="de" label="Alles" />
+      </option>
+    </input>
+    <input name="notchCards" type="select" label="Notch Allowance Cards" default="4">
+      <locale lang="zh-Hans" label="刘海屏额度卡片数" />
+      <locale lang="zh-Hant" label="瀏海屏額度卡片數" />
+      <locale lang="ja" label="ノッチの利用枠カード数" />
+      <locale lang="ko" label="노치 사용 한도 카드 수" />
+      <locale lang="de" label="Notch-Kontingentkarten" />
+      <option value="2" label="2" />
+      <option value="4" label="4" />
+      <option value="6" label="6" />
     </input>
   </inputs>
 
@@ -279,7 +366,8 @@ const WORDS = {
     "Pin to top": "置顶",
     "Move up": "上移",
     "Move down": "下移",
-    "Reset order": "恢复默认排序"
+    "Reset order": "恢复默认排序",
+    "Enable a section in dashboard settings.": "请在看板设置中至少开启一个显示区块。"
   },
   "zh-TW": {
     "Loading allowances…": "正在載入額度…",
@@ -340,7 +428,8 @@ const WORDS = {
     "Pin to top": "置頂",
     "Move up": "上移",
     "Move down": "下移",
-    "Reset order": "恢復預設排序"
+    "Reset order": "恢復預設排序",
+    "Enable a section in dashboard settings.": "請在看板設定中至少開啟一個顯示區塊。"
   },
   "ja": {
     "Loading allowances…": "利用枠を読み込み中…",
@@ -401,7 +490,8 @@ const WORDS = {
     "Pin to top": "先頭に固定",
     "Move up": "上へ移動",
     "Move down": "下へ移動",
-    "Reset order": "並び順をリセット"
+    "Reset order": "並び順をリセット",
+    "Enable a section in dashboard settings.": "ダッシュボード設定で表示項目を 1 つ以上有効にしてください。"
   },
   "ko": {
     "Loading allowances…": "사용 한도를 불러오는 중…",
@@ -462,7 +552,8 @@ const WORDS = {
     "Pin to top": "맨 위로 고정",
     "Move up": "위로 이동",
     "Move down": "아래로 이동",
-    "Reset order": "정렬 초기화"
+    "Reset order": "정렬 초기화",
+    "Enable a section in dashboard settings.": "대시보드 설정에서 표시할 항목을 하나 이상 켜세요."
   },
   "de": {
     "Loading allowances…": "Kontingente werden geladen…",
@@ -523,7 +614,8 @@ const WORDS = {
     "Pin to top": "Ganz nach oben",
     "Move up": "Nach oben",
     "Move down": "Nach unten",
-    "Reset order": "Reihenfolge zurücksetzen"
+    "Reset order": "Reihenfolge zurücksetzen",
+    "Enable a section in dashboard settings.": "Aktiviere mindestens einen Bereich in den Dashboard-Einstellungen."
   }
 };
 const WEEK = { en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], zh: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], "zh-TW": ["週日", "週一", "週二", "週三", "週四", "週五", "週六"], ja: ["日", "月", "火", "水", "木", "金", "土"], ko: ["일", "월", "화", "수", "목", "금", "토"], de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"] };
@@ -761,7 +853,7 @@ async function refresh() {
       await probeCapabilities();
       if (local()) await readLocalPage();
       if (!host || !key || !cookieName) throw new Error(t("Set Magpie URL and Web Key in this dashboard's settings."));
-      const wantUsage = inputs.showUsage === true;
+      const wantUsage = inputs.showUsage === true || inputs.tray === "usage" || inputs.notchSections === "usage" || inputs.notchSections === "all";
       const got = await Promise.all([api("state"), api("usage/quotas"), wantUsage ? api("usage?period=today") : null]);
       const prevLoadedAt = loadedAt;
       state = got[0]; quotas = got[1]; usage = got[2];
@@ -1002,8 +1094,13 @@ const FieldRow = (k, label, control) =>
   h("Row", { key: k, gap: 8, alignItems: "center", fillWidth: true },
     TX(label, { key: k + "-label", fontSize: 11, textColor: "textMuted", width: 56, singleLine: true, shrink: 0 }), control);
 
+function filteredAgents(list) {
+  if (inputs.agentFilter === "wired") return list.filter(a => a.wired);
+  if (inputs.agentFilter === "installed") return list.filter(a => a.wired || !a.cliMissing);
+  return list;
+}
 function AgentsSection() {
-  const list = orderedAgentsList((state && state.agents) || []);
+  const list = filteredAgents(orderedAgentsList((state && state.agents) || []));
   const orderIds = list.map(a => a.id);
   const wired = list.filter(a => a.wired), rest = list.filter(a => !a.wired);
   const fold = list.length > 6 && rest.length > 1 && !showAllAgents;
@@ -1170,6 +1267,7 @@ function panelTree() {
   if (inputs.showAgents !== false) sections.push(state ? AgentsSection() : h("Column", { key: "agents", gap: 4 }, SectionHead(t("Agents")), Skeleton(2)));
   if (inputs.showAllowances !== false) sections.push(AllowancesSection());
   if (inputs.showUsage === true) sections.push(UsageSection());
+  if (!sections.length) sections.push(Empty(t("Enable a section in dashboard settings.")));
   return root(h("Scroll", { grow: 1, minHeight: 0, fillWidth: true },
     h("Column", { gap: 14, padding: [2, 10, 14, 10], fillWidth: true }, ErrorBanner(), sections)));
 }
@@ -1255,37 +1353,48 @@ function trayTree() {
     }).join("\n"));
   }
   if (labels.length) lastTitle = labels.join(" | ");
+  const usageTitle = usage ? money(usage.cost) : "";
+  const title = inputs.tray === "icon" ? "" : inputs.tray === "usage" ? (usageTitle || lastTitle) : lastTitle;
+  const usageTip = usage ? t("Usage today") + "\n" + t("Requests") + " " + compact(usage.calls) + " · " + t("Tokens") + " " + compact((usage.input || 0) + (usage.output || 0) + (usage.cache_read || 0) + (usage.cache_write || 0)) + " · " + money(usage.cost) : "";
   return {
     icon: "data:image/svg+xml," + encodeURIComponent(BIRD),
     iconTemplate: true,
-    title: inputs.tray === "icon" ? "" : lastTitle,
+    title,
     error,
-    tooltip: tips.length ? tips.join("\n\n") : "magpie",
+    tooltip: inputs.tray === "usage" && usageTip ? usageTip : tips.length ? tips.join("\n\n") : "magpie",
     menu: trayMenu(),
   };
 }
 
 function notchTree() {
+  const mode = inputs.notchSections || "follow";
+  const wantAllowances = mode === "all" || mode === "allowances" || (mode === "follow" && inputs.showAllowances !== false);
+  const wantAgents = mode === "all" || mode === "agents" || (mode === "follow" && inputs.showAgents !== false);
+  const wantUsage = mode === "all" || mode === "usage" || (mode === "follow" && inputs.showUsage === true);
+  const maxCards = Math.max(1, Math.min(8, Number(inputs.notchCards) || 4));
   const ordered = orderedQuotasList((quotas || []).filter(q => !q.error && !q.asOf && (windowsOf(q).length || q.balance)));
   const cards = trayCards();
-  const shownCards = [...cards, ...ordered.filter(q => !cards.includes(q))].slice(0, 4);
+  const shownCards = [...cards, ...ordered.filter(q => !cards.includes(q))].slice(0, maxCards);
   const orderIds = ordered.map(quotaId);
   const firstWindow = shownCards[0] && windowsOf(shownCards[0])[0];
-  const badge = firstWindow ? fill(firstWindow) + "%" : error ? "!" : "--";
-  const allAgents = orderedAgentsList((state && state.agents) || []);
+  const allAgents = filteredAgents(orderedAgentsList((state && state.agents) || []));
   const agentOrderIds = allAgents.map(a => a.id);
-  const wired = allAgents.filter(a => a.wired);
+  const shownAgents = wantAllowances ? allAgents.filter(a => a.wired) : allAgents;
+  const badge = error ? "!" : wantAllowances && firstWindow ? fill(firstWindow) + "%" : wantUsage && usage ? money(usage.cost) : wantAgents ? String(shownAgents.length) : "--";
   const body = [];
   if (error) {
     body.push(ErrorBanner());
   } else if (!state && !quotas) {
     body.push(TX(t("Loading allowances…"), { fontSize: 12, textColor: "textMuted" }));
   } else {
-    if (shownCards.length) {
+    if (wantAllowances && shownCards.length) {
       body.push(h("Column", { gap: 4, fillWidth: true }, shownCards.map((q, i) => QuotaCard(q, i, true, orderIds))));
     }
-    if (wired.length) {
-      body.push(h("Column", { gap: 3, fillWidth: true }, wired.map(a => {
+    if (wantUsage) {
+      body.push(UsageSection());
+    }
+    if (wantAgents && shownAgents.length) {
+      body.push(h("Column", { gap: 3, fillWidth: true }, shownAgents.map(a => {
         const m = fieldOf(a, "model");
         const opt = m && optionFor(m, m.value);
         const ctx = orderMenuItems("magpie:agentOrder", agentOrderIds, a.id, customAgentOrder.length > 0, v => { customAgentOrder = v; }, () => { customAgentOrder = []; });

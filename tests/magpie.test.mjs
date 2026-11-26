@@ -144,3 +144,45 @@ test('allowances follow magpie usageOrder and support context-menu reordering', 
   const serialized = JSON.stringify(view.panel);
   assert.match(serialized, /Pin to top/);
 });
+
+test('supports agents-only, usage-only, agentFilter, and notchSections modes', async () => {
+  const state = {
+    settings: { lang: 'en' },
+    agents: [
+      { id: 'codex', name: 'Codex', wired: true, fields: [] },
+      { id: 'claude', name: 'Claude', wired: false, cliMissing: true, fields: [] },
+    ],
+  };
+  const quotas = [{ provider: 'codex', name: 'Codex', windows: [{ name: '5 hour', used: 25 }] }];
+  const usage = { calls: 12, input: 1000, output: 500, cost: 1.5 };
+  const context = vm.createContext({
+    URL, navigator: { language: 'en-US' },
+    $metrix: {
+      platform: 'darwin', secret: () => 'test-key', invalidate() {},
+      caniuse: async cap => cap === 'render.notch',
+      outputs: () => ({ tray: true, panel: true, notch: 'expanded', widget: { known: true, families: [] } }),
+    },
+    fetch: async url => ({
+      ok: true, status: 200,
+      text: async () => JSON.stringify(url.includes('/usage/quotas') ? quotas : url.includes('/usage?period=today') ? usage : state),
+    }),
+  });
+  vm.runInContext(script, context);
+
+  // Usage-only in tray, panel, and notch
+  const usageEnv = { inputs: { ...inputs, lang: 'en', showAgents: false, showAllowances: false, showUsage: true, tray: 'usage', notchSections: 'usage' } };
+  await context.dashboard.scheduled(usageEnv);
+  const usageView = context.dashboard.render(usageEnv);
+  assert.equal(usageView.tray.title, '$1.50');
+  assert.match(JSON.stringify(usageView.panel), /USAGE TODAY/);
+  assert.doesNotMatch(JSON.stringify(usageView.panel), /ALLOWANCES|AGENTS/);
+  assert.match(JSON.stringify(usageView.notch.expanded), /USAGE TODAY/);
+
+  // Agents-only with wired filter
+  const agentsEnv = { inputs: { ...inputs, lang: 'en', showAgents: true, showAllowances: false, showUsage: false, agentFilter: 'wired', notchSections: 'agents' } };
+  const agentsView = context.dashboard.render(agentsEnv);
+  const agentsPanel = JSON.stringify(agentsView.panel);
+  assert.match(agentsPanel, /Codex/);
+  assert.doesNotMatch(agentsPanel, /Claude/);
+  assert.match(JSON.stringify(agentsView.notch.expanded), /Codex/);
+});
