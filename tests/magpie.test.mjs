@@ -117,3 +117,30 @@ test('tray menu includes wired agent model submenus and respects outputs/notch',
   assert.ok(view.notch && view.notch.compact && view.notch.expanded);
   assert.equal(schedules.at(-1), 30000);
 });
+
+test('allowances follow magpie usageOrder and support context-menu reordering', async () => {
+  const store = new Map();
+  const state = { settings: { lang: 'en', usageOrder: ['codex', 'openrouter'] }, agents: [] };
+  const quotas = [
+    { provider: 'openrouter', name: 'OpenRouter', balance: '$10.00', windows: [] },
+    { provider: 'codex', name: 'Codex', user: 'a@b.test', windows: [{ name: '5 hour', used: 20 }] },
+  ];
+  const context = vm.createContext({
+    URL, navigator: { language: 'en-US' },
+    localStorage: {
+      getItem: k => store.get(k) ?? null,
+      setItem: (k, v) => store.set(k, String(v)),
+      removeItem: k => store.delete(k),
+    },
+    $metrix: { platform: 'darwin', secret: () => 'test-key', invalidate() {} },
+    fetch: async url => ({ ok: true, status: 200, text: async () => JSON.stringify(url.endsWith('/state') ? state : quotas) }),
+  });
+  vm.runInContext(script, context);
+  const env = { inputs: { ...inputs, lang: 'en' } };
+  await context.dashboard.scheduled(env);
+  const ordered = vm.runInContext('orderedQuotasList(quotas).map(q => q.provider)', context);
+  assert.deepEqual(ordered, ['codex', 'openrouter']);
+  const view = context.dashboard.render(env);
+  const serialized = JSON.stringify(view.panel);
+  assert.match(serialized, /Pin to top/);
+});

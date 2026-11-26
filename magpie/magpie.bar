@@ -211,7 +211,7 @@ Entfernt / Server:
 2. Web-Link von magpie öffnen (http://HOST:PORT/?k=KEY).
 3. http://HOST:PORT bei „Entfernte URL“ und KEY bei „Web-Schlüssel“ eingeben.]]></locale></docs>
 
-  <script apis="shell notification"><![CDATA[
+  <script apis="shell notification localStorage"><![CDATA[
 const h = (type, props, ...children) =>
   ({ type, props: props || {}, children: children.flat().filter(c => c !== null && c !== undefined && c !== false) });
 const TX = (text, props) => h("Text", props, String(text));
@@ -275,7 +275,11 @@ const WORDS = {
     "Hide this account": "重新给这个账号打码",
     "Quota low: {pct}% left": "额度偏低：剩余 {pct}%",
     "Quota low: {pct}% used": "额度偏高：已用 {pct}%",
-    "Quota reset": "额度已重置"
+    "Quota reset": "额度已重置",
+    "Pin to top": "置顶",
+    "Move up": "上移",
+    "Move down": "下移",
+    "Reset order": "恢复默认排序"
   },
   "zh-TW": {
     "Loading allowances…": "正在載入額度…",
@@ -332,7 +336,11 @@ const WORDS = {
     "Hide this account": "重新給這個帳號打碼",
     "Quota low: {pct}% left": "額度偏低：剩餘 {pct}%",
     "Quota low: {pct}% used": "額度偏高：已用 {pct}%",
-    "Quota reset": "額度已重置"
+    "Quota reset": "額度已重置",
+    "Pin to top": "置頂",
+    "Move up": "上移",
+    "Move down": "下移",
+    "Reset order": "恢復預設排序"
   },
   "ja": {
     "Loading allowances…": "利用枠を読み込み中…",
@@ -389,7 +397,11 @@ const WORDS = {
     "Hide this account": "このアカウントを再び隠す",
     "Quota low: {pct}% left": "残量低下：残り {pct}%",
     "Quota low: {pct}% used": "使用率上昇：{pct}% 使用済み",
-    "Quota reset": "利用枠がリセットされました"
+    "Quota reset": "利用枠がリセットされました",
+    "Pin to top": "先頭に固定",
+    "Move up": "上へ移動",
+    "Move down": "下へ移動",
+    "Reset order": "並び順をリセット"
   },
   "ko": {
     "Loading allowances…": "사용 한도를 불러오는 중…",
@@ -446,7 +458,11 @@ const WORDS = {
     "Hide this account": "이 계정 다시 숨기기",
     "Quota low: {pct}% left": "한도 부족: {pct}% 남음",
     "Quota low: {pct}% used": "한도 주의: {pct}% 사용",
-    "Quota reset": "사용 한도가 초기화됨"
+    "Quota reset": "사용 한도가 초기화됨",
+    "Pin to top": "맨 위로 고정",
+    "Move up": "위로 이동",
+    "Move down": "아래로 이동",
+    "Reset order": "정렬 초기화"
   },
   "de": {
     "Loading allowances…": "Kontingente werden geladen…",
@@ -503,7 +519,11 @@ const WORDS = {
     "Hide this account": "Dieses Konto wieder verbergen",
     "Quota low: {pct}% left": "Kontingent niedrig: {pct}% übrig",
     "Quota low: {pct}% used": "Kontingent hoch: {pct}% verbraucht",
-    "Quota reset": "Kontingent zurückgesetzt"
+    "Quota reset": "Kontingent zurückgesetzt",
+    "Pin to top": "Ganz nach oben",
+    "Move up": "Nach oben",
+    "Move down": "Nach unten",
+    "Reset order": "Reihenfolge zurücksetzen"
   }
 };
 const WEEK = { en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], zh: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"], "zh-TW": ["週日", "週一", "週二", "週三", "週四", "週五", "週六"], ja: ["日", "月", "火", "水", "木", "金", "土"], ko: ["일", "월", "화", "수", "목", "금", "토"], de: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"] };
@@ -637,6 +657,61 @@ const message = e => String((e && e.message) || e);
 // ---- Metrix.Bar capabilities, quota alerts, and adaptive polling ----
 let canNotch = false, canNotify = false, capsChecked = false;
 const prevUsed = new Map(), alertedLow = new Set();
+function loadOrder(storageKey) {
+  try {
+    if (typeof localStorage === "undefined") return [];
+    const raw = localStorage.getItem(storageKey);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr.filter(x => typeof x === "string") : [];
+  } catch (e) { return []; }
+}
+function saveOrder(storageKey, arr) {
+  try { if (typeof localStorage !== "undefined") arr.length ? localStorage.setItem(storageKey, JSON.stringify(arr)) : localStorage.removeItem(storageKey); } catch (e) {}
+}
+let customQuotaOrder = loadOrder("magpie:quotaOrder"), customAgentOrder = loadOrder("magpie:agentOrder");
+const quotaId = q => q.user ? q.provider + "|" + q.user : q.provider;
+function orderedAgentsList(list) {
+  if (!customAgentOrder.length) return list;
+  const pos = new Map(customAgentOrder.map((id, i) => [id, i]));
+  return [...list].sort((a, b) => (pos.has(a.id) ? pos.get(a.id) : 1e9) - (pos.has(b.id) ? pos.get(b.id) : 1e9));
+}
+function orderedQuotasList(list) {
+  const usageOrder = (state && state.settings && state.settings.usageOrder) || [];
+  const uPos = new Map(usageOrder.map((p, i) => [p, i]));
+  const cPos = new Map(customQuotaOrder.map((id, i) => [id, i]));
+  return [...list].sort((a, b) => {
+    const ca = cPos.has(quotaId(a)) ? cPos.get(quotaId(a)) : 1e9;
+    const cb = cPos.has(quotaId(b)) ? cPos.get(quotaId(b)) : 1e9;
+    if (ca !== cb) return ca - cb;
+    const cp = cPos.has(a.provider) ? cPos.get(a.provider) : 1e9;
+    const dq = cPos.has(b.provider) ? cPos.get(b.provider) : 1e9;
+    if (cp !== dq) return cp - dq;
+    const ua = uPos.has(a.provider) ? uPos.get(a.provider) : 1e9;
+    const ub = uPos.has(b.provider) ? uPos.get(b.provider) : 1e9;
+    return ua - ub;
+  });
+}
+function moveInOrder(storageKey, ids, targetId, delta) {
+  const cur = ids.slice();
+  const idx = cur.indexOf(targetId);
+  if (idx < 0) return cur;
+  const nextIdx = delta === "top" ? 0 : Math.max(0, Math.min(cur.length - 1, idx + delta));
+  if (nextIdx === idx) return cur;
+  cur.splice(idx, 1);
+  cur.splice(nextIdx, 0, targetId);
+  saveOrder(storageKey, cur);
+  $metrix.invalidate();
+  return cur;
+}
+function orderMenuItems(storageKey, ids, targetId, hasCustom, setCustom, resetCustom) {
+  const idx = ids.indexOf(targetId);
+  const items = [];
+  if (idx > 0) items.push({ label: t("Pin to top"), onClick: () => setCustom(moveInOrder(storageKey, ids, targetId, "top")) });
+  if (idx > 0) items.push({ label: t("Move up"), onClick: () => setCustom(moveInOrder(storageKey, ids, targetId, -1)) });
+  if (idx >= 0 && idx < ids.length - 1) items.push({ label: t("Move down"), onClick: () => setCustom(moveInOrder(storageKey, ids, targetId, 1)) });
+  if (hasCustom) items.push({ label: t("Reset order"), onClick: () => { saveOrder(storageKey, []); resetCustom(); $metrix.invalidate(); } });
+  return items;
+}
 async function probeCapabilities() {
   if (capsChecked || typeof $metrix.caniuse !== "function") return;
   capsChecked = true;
@@ -873,15 +948,17 @@ function modelMenu(f, pick) {
   return groups.map(g => ({ label: (g.name || t("default")) + "  " + g.items.length, checked: g.items.some(i => i.checked), items: g.items }));
 }
 
-function AgentRow(a) {
+function AgentRow(a, orderIds) {
   const model = fieldOf(a, "model");
   const opt = model && optionFor(model, model.value);
   const open = openAgent === a.id;
   const summary = model ? (opt ? opt.label : model.value) || t("default") : "";
+  const ctx = orderIds ? orderMenuItems("magpie:agentOrder", orderIds, a.id, customAgentOrder.length > 0, v => { customAgentOrder = v; }, () => { customAgentOrder = []; }) : [];
   const head = h("Row", {
     key: "head:" + a.id, height: 36, gap: 10, padding: [0, 12], alignItems: "center", fillWidth: true, radius: 9, cursor: "pointer",
     background: open ? "surfaceHover" : "#00000000", hover: { background: "surfaceHover" }, pressed: { background: "surfacePressed" },
     tooltip: a.path || a.name, label: a.name,
+    contextMenu: ctx.length ? ctx : undefined,
     onClick: () => { openAgent = open ? "" : a.id; $metrix.invalidate(); },
   },
     Logo(a.icon, 18),
@@ -926,14 +1003,15 @@ const FieldRow = (k, label, control) =>
     TX(label, { key: k + "-label", fontSize: 11, textColor: "textMuted", width: 56, singleLine: true, shrink: 0 }), control);
 
 function AgentsSection() {
-  const list = (state && state.agents) || [];
+  const list = orderedAgentsList((state && state.agents) || []);
+  const orderIds = list.map(a => a.id);
   const wired = list.filter(a => a.wired), rest = list.filter(a => !a.wired);
   const fold = list.length > 6 && rest.length > 1 && !showAllAgents;
   const shown = fold ? wired.concat(rest.filter(a => a.id === openAgent)) : list;
   const hidden = list.length - shown.length;
   return h("Column", { key: "agents", gap: 4, fillWidth: true },
     SectionHead(t("Agents"), list.length),
-    list.length ? h("Column", { gap: 1, fillWidth: true }, shown.map(AgentRow)) : Empty(t("No agents found")),
+    list.length ? h("Column", { gap: 1, fillWidth: true }, shown.map(a => AgentRow(a, orderIds))) : Empty(t("No agents found")),
     hidden > 0 || showAllAgents && list.length > 6 ? h("Row", {
       padding: [6, 12], radius: 8, cursor: "pointer", hover: { background: "surfaceHover" },
       onClick: () => { showAllAgents = !showAllAgents; $metrix.invalidate(); },
@@ -970,7 +1048,7 @@ function resetSay(ws) {
     return i ? (w.pool && pooled(ws) ? String(w.pool).split(/[\s&]/)[0] + " " : "") + shortWindow(w) + " " + resetClock(at) : t("Resets {when}", { when: resetClock(at) });
   }).join(" · ");
 }
-function QuotaCard(q, i, logo) {
+function QuotaCard(q, i, logo, orderIds) {
   const who = q.alias || q.user || q.name;
   const all = windowsOf(q), pools = pooled(all);
   const ws = all.slice(0, pools ? 4 : 3);
@@ -985,9 +1063,12 @@ function QuotaCard(q, i, logo) {
     else right = TX(q.balance, { fontSize: 13, fontWeight: 600, fontFeatures: "tnum", shrink: 0 });
   }
   const tip = hideIn([q.name, q.alias, q.user, q.plan, q.balance && t("Balance") + " " + q.balance].filter(Boolean).join(" · ") + (q.error ? "\n" + q.error : ""), q.provider);
+  const orderMenu = orderIds ? orderMenuItems("magpie:quotaOrder", orderIds, quotaId(q), customQuotaOrder.length > 0, v => { customQuotaOrder = v; }, () => { customQuotaOrder = []; }) : [];
+  const ctx = [{ label: t("Refresh this allowance"), onClick: () => refreshQuota(q) }];
+  if (orderMenu.length) ctx.push({ separator: true }, ...orderMenu);
   return h("Row", {
     key: q.provider + ":" + (q.user || "") + ":" + i, gap: 10, padding: [10, 12], radius: 11, background: "surfaceHover", alignItems: "center", fillWidth: true,
-    tooltip: tip, contextMenu: [{ label: t("Refresh this allowance"), onClick: () => refreshQuota(q) }],
+    tooltip: tip, contextMenu: ctx,
     opacity: q.asOf ? 0.7 : 1,
   },
     logo ? Logo(q.icon, 16) : null,
@@ -996,15 +1077,15 @@ function QuotaCard(q, i, logo) {
       line ? TX(line, Object.assign({ fontSize: 11, textColor: lineColor, lineHeight: 1.3 }, q.error ? { maxLines: 2 } : { singleLine: true })) : null),
     right);
 }
-function AllowanceGroup(g) {
+function AllowanceGroup(g, orderIds) {
   // a lone card that is the provider itself (a balance) carries its own logo, no heading
-  if (g.cards.length === 1 && !(g.cards[0].alias || g.cards[0].user)) return QuotaCard(g.cards[0], 0, true);
+  if (g.cards.length === 1 && !(g.cards[0].alias || g.cards[0].user)) return QuotaCard(g.cards[0], 0, true, orderIds);
   return h("Column", { key: g.provider, gap: 6, fillWidth: true },
     h("Row", { gap: 8, alignItems: "center", padding: [2, 2, 0, 2] },
       Logo(g.icon, 14),
       TX(g.name, { fontSize: 10.5, fontWeight: 600, letterSpacing: 0.6, textColor: "textMuted", singleLine: true, shrink: 1, minWidth: 0 }),
       g.cards.length > 1 ? TX(String(g.cards.length), { fontSize: 9.5, fontWeight: 600, textColor: "textMuted", background: TRACK, radius: 8, padding: [0, 5] }) : null),
-    g.cards.map((q, i) => QuotaCard(q, i, false)));
+    g.cards.map((q, i) => QuotaCard(q, i, false, orderIds)));
 }
 function grouped(cards) {
   const groups = [];
@@ -1017,12 +1098,13 @@ function grouped(cards) {
 }
 function AllowancesSection() {
   const all = quotas || [];
-  const ok = all.filter(q => !q.error && (windowsOf(q).length || q.balance || (q.windows || []).some(w => w.unlimited)));
+  const ok = orderedQuotasList(all.filter(q => !q.error && (windowsOf(q).length || q.balance || (q.windows || []).some(w => w.unlimited))));
+  const orderIds = ok.map(quotaId);
   const bad = all.filter(q => q.error);
   return h("Column", { key: "allowances", gap: 6, fillWidth: true },
     SectionHead(t("Allowances")),
     quotas === null ? Skeleton(2) : !all.length ? Empty(t("No allowances yet")) :
-      h("Column", { gap: 8, fillWidth: true }, grouped(ok).map(AllowanceGroup)),
+      h("Column", { gap: 8, fillWidth: true }, grouped(ok).map(g => AllowanceGroup(g, orderIds))),
     bad.length ? h("Row", {
       key: "bad", gap: 8, padding: [7, 12], radius: 9, alignItems: "center", cursor: "pointer", fillWidth: true,
       hover: { background: "surfaceHover" }, onClick: () => { showBroken = !showBroken; $metrix.invalidate(); },
@@ -1133,9 +1215,9 @@ function widgetDate(at) {
 
 // ---- the menu bar, as magpie's own reads: "14% · 0%" per card ----
 function trayCards() {
-  const all = quotas || [];
+  const all = orderedQuotasList(quotas || []);
   const ids = (state && state.settings && state.settings.trayUsages) || [];
-  const named = ids.map(id => all.find(q => (q.user ? q.provider + "|" + q.user : q.provider) === id)).filter(Boolean);
+  const named = ids.map(id => all.find(q => quotaId(q) === id)).filter(Boolean);
   if (named.length) return named;
   const first = all.find(q => !q.error && !q.asOf && windowsOf(q).length);
   return first ? [first] : [];
@@ -1184,24 +1266,33 @@ function trayTree() {
 }
 
 function notchTree() {
+  const ordered = orderedQuotasList((quotas || []).filter(q => !q.error && !q.asOf && (windowsOf(q).length || q.balance)));
   const cards = trayCards();
-  const firstWindow = cards[0] && windowsOf(cards[0])[0];
+  const shownCards = [...cards, ...ordered.filter(q => !cards.includes(q))].slice(0, 4);
+  const orderIds = ordered.map(quotaId);
+  const firstWindow = shownCards[0] && windowsOf(shownCards[0])[0];
   const badge = firstWindow ? fill(firstWindow) + "%" : error ? "!" : "--";
-  const wired = ((state && state.agents) || []).filter(a => a.wired).slice(0, 3);
+  const allAgents = orderedAgentsList((state && state.agents) || []);
+  const agentOrderIds = allAgents.map(a => a.id);
+  const wired = allAgents.filter(a => a.wired);
   const body = [];
   if (error) {
     body.push(ErrorBanner());
   } else if (!state && !quotas) {
     body.push(TX(t("Loading allowances…"), { fontSize: 12, textColor: "textMuted" }));
   } else {
-    if (cards.length) {
-      body.push(h("Column", { gap: 4, fillWidth: true }, cards.slice(0, 2).map((q, i) => QuotaCard(q, i, true))));
+    if (shownCards.length) {
+      body.push(h("Column", { gap: 4, fillWidth: true }, shownCards.map((q, i) => QuotaCard(q, i, true, orderIds))));
     }
     if (wired.length) {
       body.push(h("Column", { gap: 3, fillWidth: true }, wired.map(a => {
         const m = fieldOf(a, "model");
         const opt = m && optionFor(m, m.value);
-        return h("Row", { gap: 8, padding: [5, 8], radius: 7, background: "surfaceHover", alignItems: "center", fillWidth: true },
+        const ctx = orderMenuItems("magpie:agentOrder", agentOrderIds, a.id, customAgentOrder.length > 0, v => { customAgentOrder = v; }, () => { customAgentOrder = []; });
+        return h("Row", {
+          gap: 8, padding: [5, 8], radius: 7, background: "surfaceHover", alignItems: "center", fillWidth: true,
+          contextMenu: ctx.length ? ctx : undefined,
+        },
           Logo(a.icon, 14),
           TX(a.name, { fontSize: 12, fontWeight: 500, singleLine: true }),
           h("Spacer"),
