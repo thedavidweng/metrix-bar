@@ -27,7 +27,7 @@ jobs:
         run: node --test tests/magpie.test.mjs
       - name: Rebuild index.json with the official builder
         env:
-          BUILDER_SHA256: da401d79c27d8218fa5ea27f83d135b528c853d3026c34acf5556b791bd8c2a4
+          BUILDER_SHA256: 9816c1d6436043c66c0946b1bbd3489a0d089fd1522b959d3d66e754131c67d5
         run: |
           curl -fsS https://metrix.bar/dashboards/build.js -o "$RUNNER_TEMP/build.js"
           echo "$BUILDER_SHA256  $RUNNER_TEMP/build.js" | sha256sum -c -
